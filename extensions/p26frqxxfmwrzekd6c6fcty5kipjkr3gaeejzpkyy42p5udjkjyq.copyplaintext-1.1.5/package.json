@@ -1,0 +1,92 @@
+{
+	"name": "copyplaintext",
+	"displayName": "Copy Plain Text",
+	"description": "Copy plain text with no formatting.",
+	"icon": "icon.png",
+	"version": "1.1.5",
+	"license": "SEE LICENSE IN LICENSE.txt",
+	"publisher": "p26frqxxfmwrzekd6c6fcty5kipjkr3gaeejzpkyy42p5udjkjyq",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/xan1000/CopyPlainText"
+	},
+	"homepage": "https://github.com/xan1000/CopyPlainText",
+	"engines": {
+		"vscode": "^1.58.2"
+	},
+	"categories": [
+		"Formatters",
+		"Keymaps",
+		"Other"
+	],
+	"keywords": [
+		"copy",
+		"paste",
+		"unformatted",
+		"plain",
+		"text"
+	],
+	"activationEvents": [
+		"onCommand:extension.copyPlainText"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "extension.copyPlainText",
+				"title": "Copy Plain Text"
+			}
+		],
+		"menus": {
+			"commandPalette": [
+				{
+					"command": "extension.copyPlainText",
+					"when": "editorHasSelection"
+				}
+			],
+			"editor/context": [
+				{
+					"when": "editorHasSelection",
+					"command": "extension.copyPlainText",
+					"group": "9_cutcopypaste@2"
+				}
+			]
+		},
+		"keybindings": [
+			{
+				"command": "extension.copyPlainText",
+				"key": "ctrl+alt+c",
+				"when": "editorHasSelection"
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"lint": "eslint src --ext ts",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile && npm run lint",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/glob": "^7.1.4",
+		"@types/mocha": "^9.0.0",
+		"@types/node": "^16.4.4",
+		"@types/vscode": "^1.58.1",
+		"@typescript-eslint/eslint-plugin": "^4.28.5",
+		"@typescript-eslint/parser": "^4.28.5",
+		"eslint": "^7.31.0",
+		"glob": "^7.1.7",
+		"mocha": "^9.0.3",
+		"typescript": "^4.3.5",
+		"vscode-test": "^1.6.1"
+	},
+	"dependencies": {
+		"copy-paste": "^1.3.0"
+	},
+	"__metadata": {
+		"installedTimestamp": 1784279941342,
+		"targetPlatform": "undefined",
+		"size": 414702
+	}
+}
