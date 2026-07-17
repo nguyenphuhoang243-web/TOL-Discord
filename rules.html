@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luật máy chủ</title>
+  <style>
+    :root {
+      --bg: #07101d;
+      --panel: rgba(255,255,255,0.08);
+      --text: #f4f7ff;
+      --muted: #b9c3d8;
+      --accent: #5865f2;
+      --accent-2: #ff4d8d;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(88,101,242,0.25), transparent 25%),
+        linear-gradient(135deg, #060b14 0%, #0c1730 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .card {
+      width: min(900px, 100%);
+      background: var(--panel);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 24px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+      backdrop-filter: blur(18px);
+      padding: 28px;
+    }
+
+    h1 { margin: 0 0 8px; font-size: 1.8rem; }
+    p { color: var(--muted); line-height: 1.7; }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 18px 0 12px;
+    }
+
+    .btn {
+      border: none;
+      border-radius: 999px;
+      color: white;
+      padding: 10px 16px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 360px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(0,0,0,0.2);
+      color: var(--text);
+      padding: 16px;
+      resize: vertical;
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    textarea:focus {
+      outline: 2px solid rgba(88,101,242,0.35);
+      border-color: rgba(88,101,242,0.45);
+    }
+
+    .hint {
+      margin-top: 8px;
+      font-size: 0.95rem;
+      color: #dfe6ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Luật máy chủ</h1>
+    <p>Nhập nội dung luật ở đây. Mọi thứ sẽ được lưu tự động trên trình duyệt của bạn.</p>
+    <div class="toolbar">
+      <button class="btn btn-primary" id="saveBtn">Lưu luật</button>
+      <button class="btn btn-secondary" id="clearBtn">Xóa nội dung</button>
+      <a class="btn btn-secondary" href="index.html">Quay về trang chủ</a>
+    </div>
+    <textarea id="rulesBox" placeholder="Ví dụ:
+1. Tôn trọng mọi người
+2. Không spam hoặc flood
+3. Không gửi nội dung gây hại
+4. Giữ thái độ lịch sự trong mọi kênh"></textarea>
+    <div class="hint" id="status">Chưa có nội dung nào được lưu.</div>
+  </div>
+
+  <script>
+    const rulesBox = document.getElementById('rulesBox');
+    const saveBtn = document.getElementById('saveBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const status = document.getElementById('status');
+    const STORAGE_KEY = 'server-rules-content';
+
+    const loadRules = () => {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        rulesBox.value = saved;
+        status.textContent = 'Đã tải nội dung trước đó.';
+      }
+    };
+
+    const saveRules = () => {
+      localStorage.setItem(STORAGE_KEY, rulesBox.value);
+      status.textContent = 'Đã lưu luật máy chủ.';
+    };
+
+    saveBtn.addEventListener('click', saveRules);
+    clearBtn.addEventListener('click', () => {
+      rulesBox.value = '';
+      localStorage.removeItem(STORAGE_KEY);
+      status.textContent = 'Đã xóa nội dung.';
+    });
+
+    rulesBox.addEventListener('input', () => {
+      status.textContent = 'Đang chỉnh sửa...';
+    });
+
+    loadRules();
+  </script>
+</body>
+</html>
