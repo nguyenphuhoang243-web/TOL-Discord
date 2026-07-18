@@ -354,6 +354,99 @@
       line-height: 1.6;
     }
 
+    .stack-stage {
+      padding-top: 10px;
+      padding-bottom: 20px;
+    }
+
+    .stack-heading {
+      max-width: 720px;
+      margin-bottom: 20px;
+    }
+
+    .stack-heading h3 {
+      margin: 0 0 10px;
+      font-size: 1.6rem;
+    }
+
+    .stack-heading p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .stack-viewport {
+      position: relative;
+      min-height: 900px;
+      padding: 10px 0 20px;
+    }
+
+    .stack-card {
+      position: sticky;
+      top: 72px;
+      max-width: 900px;
+      margin: 0 auto 14px;
+      padding: 24px 28px;
+      border-radius: 24px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.16), rgba(255,255,255,0.06));
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: 0 16px 50px rgba(0,0,0,0.3);
+      backdrop-filter: blur(18px);
+      overflow: hidden;
+      transform-origin: center;
+      transition: transform 0.45s cubic-bezier(.2,.8,.2,1), box-shadow 0.35s ease, opacity 0.45s ease;
+      will-change: transform, opacity;
+    }
+
+    .stack-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, rgba(88,101,242,0.22), transparent 45%, rgba(255,77,141,0.16));
+      pointer-events: none;
+    }
+
+    .stack-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .stack-card-1 {
+      z-index: 3;
+    }
+
+    .stack-card-2 {
+      top: 96px;
+      z-index: 2;
+      margin-top: -10px;
+    }
+
+    .stack-card-3 {
+      top: 120px;
+      z-index: 1;
+      margin-top: -16px;
+    }
+
+    .stack-card span {
+      display: inline-block;
+      margin-bottom: 8px;
+      color: #dfe6ff;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      font-size: 0.78rem;
+    }
+
+    .stack-card h4 {
+      margin: 0 0 8px;
+      font-size: 1.12rem;
+    }
+
+    .stack-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
     .floating-btn {
       position: fixed;
       right: 24px;
@@ -486,7 +579,33 @@
     </div>
   </section>
 
-  <section class="section" id="about">
+  <section class="section stack-stage" id="about">
+    <div class="stack-heading reveal">
+      <div class="badge">Immersive Scroll</div>
+      <h3>Cuộn xuống là thấy hiệu ứng “ghép lớp” ngay</h3>
+      <p>Những khối card sẽ chồng lên nhau khi bạn kéo xuống, tạo cảm giác như đang mở từng lớp nội dung.</p>
+    </div>
+
+    <div class="stack-viewport">
+      <article class="stack-card stack-card-1 reveal">
+        <span>01 / Community</span>
+        <h4>Không gian kết nối đầy cảm hứng</h4>
+        <p>Hệ thống kênh và hoạt động được tổ chức như một trải nghiệm liên tục, giúp người xem cảm nhận sự sống động của server.</p>
+      </article>
+      <article class="stack-card stack-card-2 reveal delay-1">
+        <span>02 / Events</span>
+        <h4>Sự kiện được đưa vào trung tâm</h4>
+        <p>Khơi gợi cảm giác nơi đây luôn có điều mới xảy ra: party, mini game, challenge và những khoảnh khắc đáng nhớ.</p>
+      </article>
+      <article class="stack-card stack-card-3 reveal delay-2">
+        <span>03 / Growth</span>
+        <h4>Mỗi lần cuộn là một lớp mới mở ra</h4>
+        <p>Đây là kiểu bố cục tạo cảm giác “ghép hình” rất phù hợp cho một landing page Discord hiện đại.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section" id="features">
     <h3 class="reveal">Điểm nổi bật của server</h3>
     <div class="feature-grid">
       <div class="feature reveal">
