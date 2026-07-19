@@ -2,6 +2,7 @@
 <html lang="vi">
 <head>
   <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
+  
 
 <script>
 const lenis = new Lenis({
@@ -21,6 +22,15 @@ requestAnimationFrame(raf);
 </script>
 
 <body>
+
+  <!-- MÀN HÌNH LOADER PHỦ TOÀN MÀN HÌNH (Mặc định ẩn) -->
+<div id="loadingOverlay" class="loading-overlay">
+  <div class="custom-loader"></div>
+</div>
+
+<!-- VÍ DỤ NÚT XEM LUẬT MÁY CHỦ CỦA BẠN (Thay bằng nút hiện tại của bạn) -->
+<!-- Lưu ý: Đổi href="#" và thêm data-href chứa đường dẫn thật bạn muốn tới -->
+<a href="#" data-href="duong-dan-luat-may-chu.html" class="btn-luat">Xem luật máy chủ</a>
 
 <!-- NÚT ĐỔI THEME GIỮ NGUYÊN HIỆU ỨNG HẠT LẤP LÁNH -->
 <div class="toggle-cont position-theme-toggle" id="themeContainer">
@@ -48,6 +58,64 @@ requestAnimationFrame(raf);
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Discord Server Landing Page</title>
   <style>
+
+  /* Màn hình phủ đen mờ toàn trang khi load */
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(12, 12, 12, 0.85); /* Nền tối mờ che giao diện cũ */
+  backdrop-filter: blur(5px);
+  z-index: 99999; /* Đảm bảo đè lên trên tất cả mọi thứ kể cả nút theme */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  /* Hiệu ứng ẩn hiện mượt mà */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+/* Class kích hoạt khi bấm nút */
+.loading-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Đồng bộ màu loader với chế độ sáng nếu muốn (tùy chọn) */
+body.light-theme .loading-overlay {
+  background-color: rgba(240, 244, 249, 0.85); /* Nền sáng mờ khi ở light mode */
+}
+
+/* --- CODE CSS CUSTOM LOADER CỦA BẠN --- */
+.custom-loader {
+  width: 70px;
+  height: 70px;
+  background: #ffa600;
+  border-radius: 50px;
+  -webkit-mask: radial-gradient(circle 31px at 50% calc(100% + 13px),#000 95%,#0000) top 4px left 50%,
+    radial-gradient(circle 31px,#000 95%,#0000) center,
+    radial-gradient(circle 31px at 50% -13px,#000 95%,#0000) bottom 4px left 50%,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  -webkit-mask-repeat: no-repeat;
+  animation: cu10 1.5s infinite;
+}
+
+@keyframes cu10 {
+  0% { -webkit-mask-size: 0 18px, 0 18px, 0 18px, auto }
+  16.67% { -webkit-mask-size: 100% 18px, 0 18px, 0 18px, auto }
+  33.33% { -webkit-mask-size: 100% 18px, 100% 18px, 0 18px, auto }
+  50% { -webkit-mask-size: 100% 18px, 100% 18px, 100% 18px, auto }
+  66.67% { -webkit-mask-size: 0 18px, 100% 18px, 100% 18px, auto }
+  83.33% { -webkit-mask-size: 0 18px, 0 18px, 100% 18px, auto }
+  100% { -webkit-mask-size: 0 18px, 0 18px, 0 18px, auto }
+}
+
     html,
 body {
   scroll-behavior: auto !important;
@@ -1276,7 +1344,7 @@ body.light-theme .username-box.active input {
   </div>
 
   <script>
-
+  
     // --- ĐIỀU KHIỂN NÚT CHUYỂN ĐỔI THEME GIAO DIỆN ---
     const themeToggleInput = document.getElementById('themeToggle');
     
@@ -1287,6 +1355,26 @@ body.light-theme .username-box.active input {
         document.body.classList.remove('light-theme');
       }
     });
+
+      // --- HIỆU ỨNG LOADER KHI XEM LUẬT MÁY CHỦ ---
+    const btnLuat = document.querySelector('.btn-luat');
+    const loadingOverlay = document.getElementById('loadingOverlay');
+
+    if (btnLuat && loadingOverlay) {
+      btnLuat.addEventListener('click', function(event) {
+        event.preventDefault(); // Chặn không cho chuyển trang ngay lập tức
+        
+        const targetUrl = this.getAttribute('data-href'); // Lấy đường dẫn link
+        
+        // Hiện màn hình loader lên
+        loadingOverlay.classList.add('active');
+        
+        // Chờ đúng 2 giây (2000 mili-giây) rồi chuyển hướng
+        setTimeout(() => {
+          window.location.href = targetUrl;
+        }, 2000);
+      });
+    }
 
 const floatingBtn = document.getElementById('floatingInvite');
     const joinBtn = document.getElementById('joinBtn');
