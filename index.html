@@ -941,6 +941,9 @@
     <div class="send-btn" id="sendBtn">
         <span>🚀 Gửi Username</span>
     </div>
+      <div class="success">✅ Đã gửi thành công</div>
+    <div class="success">✅ Đã gửi thành công</div>
+</div>
 
     <!-- Thông báo kiểu Discord trượt hiện lên ở góc -->
     <div class="toast-notification" id="successToast">
@@ -1105,9 +1108,76 @@
 const userLabel = document.querySelector(".username-label");
 const userInput = document.getElementById("username");
 
+// Lấy các phần tử giao diện
+const userBox = document.querySelector(".username-box");
+const userLabel = document.querySelector(".username-label");
+const userInput = document.getElementById("username");
+const sendBtn = document.getElementById("sendBtn");
+const successes = document.querySelectorAll(".success"); 
+
+// Bấm vào nút Username -> Kích hoạt class active để ô nhập trượt ra
 userLabel.onclick = () => {
     userBox.classList.add("active");
     userInput.focus();
+};
+
+// Bấm ra ngoài khi chưa nhập gì -> tự động thu nhỏ lại
+userInput.addEventListener("blur", () => {
+    if (userInput.value.trim() === "") {
+        userBox.classList.remove("active");
+    }
+});
+
+// Xử lý khi bấm nút Gửi Username vào Google Form
+sendBtn.onclick = async () => {
+    const usernameVal = userInput.value.trim();
+    
+    if (usernameVal === "") {
+        alert("Vui lòng nhập Username trước khi gửi!");
+        return;
+    }
+
+    // Đổi trạng thái nút bấm
+    sendBtn.querySelector("span").textContent = "⏳ Đang gửi...";
+    sendBtn.style.pointerEvents = "none";
+
+    // Cấu hình link Google Form của bạn
+    const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfG7iWgzj-vkOufppbVaXIyWv6227w7ZDpeArwfEhl02hp--Q/formResponse";
+    const formData = new FormData();
+    formData.append("entry.1432806072", usernameVal);
+
+    try {
+        // Gửi ngầm dữ liệu lên Google Form công khai
+        await fetch(formUrl, {
+            method: "POST",
+            body: formData,
+            mode: "no-cors"
+        });
+
+        // Hiện TẤT CẢ các thông báo thành công (.success) cùng lúc
+        successes.forEach(success => {
+            success.classList.add("show");
+        });
+
+        // Ẩn thông báo đi sau 3 giây
+        setTimeout(() => {
+            successes.forEach(success => {
+                success.classList.remove("show");
+            });
+        }, 3000);
+
+        // Reset lại ô nhập dữ liệu
+        userInput.value = "";
+        userBox.classList.remove("active");
+
+    } catch (error) {
+        console.error("Lỗi:", error);
+        alert("Có lỗi xảy ra khi gửi, vui lòng thử lại!");
+    } finally {
+        // Trả nút bấm về trạng thái ban đầu
+        sendBtn.querySelector("span").textContent = "🚀 Gửi Username";
+        sendBtn.style.pointerEvents = "auto";
+    }
 };
 
 userInput.addEventListener("blur", () => {
