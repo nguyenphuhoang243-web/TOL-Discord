@@ -5,170 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Discord Server Landing Page</title>
   <style>
-    /* CSS Sửa lỗi hiển thị - Dán vào cuối thẻ style */
-.username-box {
-    width: 340px;
-    margin: 0 auto 30px;
-    position: relative;
-    text-align: center;
-}
-
-.username-label {
-    width: 100%;
-    padding: 16px;
-    color: white;
-    font-weight: bold;
-    border-radius: 16px;
-    cursor: pointer;
-    background: linear-gradient(135deg, #7b2ff7, #3b82f6);
-    box-shadow: 0 0 20px rgba(123, 47, 247, .5), 0 0 35px rgba(59, 130, 246, .4);
-    transition: .35s;
-}
-
-.username-box input {
-    width: 100%;
-    margin-top: 12px;
-    height: 0;
-    opacity: 0;
-    border: none;
-    outline: none;
-    border-radius: 14px;
-    background: rgba(255, 255, 255, .08);
-    color: white;
-    padding: 0 18px;
-    transition: .35s;
-    backdrop-filter: blur(12px);
-}
-
-/* Kích hoạt hiển thị ô nhập khi active */
-.username-box.active input {
-    height: 54px;
-    opacity: 1;
-    padding: 0 18px;
-    border: 2px solid transparent;
-    background: linear-gradient(rgba(20, 20, 40, .9), rgba(20, 20, 40, .9)) padding-box, linear-gradient(135deg, #7b2ff7, #3b82f6) border-box;
-    box-shadow: 0 0 15px #7b2ff7, 0 0 30px #3b82f6;
-}
-
-.username-box.active .username-label {
-    transform: translateY(-5px) scale(.95);
-}
-
-/* Nút gửi */
-.send-btn {
-    width: 100%;
-    margin-top: 12px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 16px;
-    border-radius: 16px;
-    cursor: pointer;
-    color: white;
-    font-weight: bold;
-    background: linear-gradient(135deg, #7b2ff7, #3b82f6);
-    box-shadow: 0 0 20px rgba(123, 47, 247, .45), 0 0 40px rgba(59, 130, 246, .35);
-    transition: .3s;
-}
-.send-btn:hover { transform: translateY(-3px); box-shadow: 0 0 35px #7b2ff7, 0 0 55px #3b82f6; }
-.send-btn span { pointer-events: none; }
-
-/* CSS cho 2 thông báo success */
-.success {
-    display: none;
-    margin-top: 12px;
-    padding: 12px;
-    background: #19c37d;
-    color: white;
-    border-radius: 10px;
-    font-weight: bold;
-}
-.success.show {
-    display: block;
-}
-
-    /* Nút gửi đồng bộ style */
-.send-btn {
-    width: 100%;
-    margin: 18px auto 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 16px;
-    border-radius: 16px;
-    cursor: pointer;
-    color: white;
-    font-size: 17px;
-    font-weight: 700;
-    user-select: none;
-    background: linear-gradient(135 deg, #7b2ff7, #3b82f6);
-    box-shadow: 0 0 20px rgba(123, 47, 247, .45), 0 0 40px rgba(59, 130, 246, .35);
-    transition: .3s;
-}
-
-.send-btn:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 0 35px #7b2ff7, 0 0 55px #3b82f6;
-}
-
-.send-btn:active {
-    transform: scale(.96);
-    transition: .1s;
-}
-
-.send-btn span {
-    pointer-events: none;
-}
-
-/* Thông báo Toast kiểu Discord */
-.toast-notification {
-    position: fixed;
-    top: 20px;
-    right: -400px; /* Ban đầu ẩn bên ngoài */
-    background: #23a55a; /* Màu xanh lá Discord */
-    color: white;
-    padding: 16px 24px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 20px rgba(35, 165, 90, 0.4);
-    z-index: 9999;
-    transition: right 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.toast-notification.show {
-    right: 20px; /* Trượt vào màn hình */
-}
-
-.toast-icon {
-    font-size: 20px;
-    font-weight: bold;
-    background: rgba(255, 255, 255, 0.2);
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-}
-
-.toast-content {
-    display: flex;
-    flex-direction: column;
-}
-
-.toast-title {
-    font-weight: bold;
-    font-size: 15px;
-}
-
-.toast-desc {
-    font-size: 13px;
-    opacity: 0.9;
-}
     
-.success{
+#success{
     position:fixed;
     top:30px;
     right:-400px;
@@ -187,7 +25,7 @@
     transition:.45s;
 }
 
-.success.show{
+#success.show{
     right:30px;
 }
 
@@ -1014,36 +852,17 @@
   </section>
 
   <section class="section stack-stage" id="about">
-    <div class="username-box">
+    <div class="username-box reveal">
     <div class="username-label">Username</div>
     <input type="text" id="username" placeholder="Nhập username...">
-    
-    <!-- Nút Gửi xịn đồng bộ -->
-   <!-- CỤM USERNAME CHO CLAN - COPY ĐÈ TOÀN BỘ -->
-<div class="username-box" id="clanUserBox">
-    <div class="username-label" id="clanUserLabel">Username</div>
-    <input type="text" id="clanUserInput" placeholder="Nhập username...">
-    
-    <!-- Nút Gửi Username -->
-    <div class="send-btn" id="clanSendBtn">
-        <span>🚀 Gửi Username</span>
-    </div>
-
-    <!-- 2 Thông báo thành công đổi sang class -->
-    <div class="success">✅ Đã gửi thành công</div>
-    <div class="success">✅ Đã gửi thành công</div>
+</div>
+<div class="send-btn" id="sendBtn">
+    <span>🚀 Gửi Username</span>
 </div>
 
-    <!-- Thông báo kiểu Discord trượt hiện lên ở góc -->
-    <div class="toast-notification" id="successToast">
-        <div class="toast-icon">✓</div>
-        <div class="toast-content">
-            <span class="toast-title">Thành công</span>
-            <span class="toast-desc">Đã gửi thành công!</span>
-        </div>
-    </div>
+<div id="success">
+✅ Đã gửi thành công
 </div>
-    
     <div class="stack-heading reveal">
       <div class="badge">Immersive Scroll</div>
       <h3>Cuộn xuống là thấy hiệu ứng “ghép lớp” ngay</h3>
@@ -1092,7 +911,7 @@
   </div>
 
   <script>
-    const floatingBtn = document.getElementById('floatingInvite');
+const floatingBtn = document.getElementById('floatingInvite');
     const joinBtn = document.getElementById('joinBtn');
     const cursorGlow = document.getElementById('cursorGlow');
     const scrollProgress = document.getElementById('scrollProgress');
@@ -1193,217 +1012,74 @@
       }
     }, { passive: true });
 
+    // --- ĐOẠN ĐÃ SỬA LỖI TƯƠNG TÁC & GỬI GOOGLE FORMS ---
     const userBox = document.querySelector(".username-box");
-const userLabel = document.querySelector(".username-label");
-const userInput = document.getElementById("username");
+    const userLabel = document.querySelector(".username-label");
+    const userInput = document.getElementById("username");
+    const sendBtn = document.getElementById("sendBtn");
+    const successNotification = document.getElementById("success");
 
-// Lấy các phần tử giao diện
-const userBox = document.querySelector(".username-box");
-const userLabel = document.querySelector(".username-label");
-const userInput = document.getElementById("username");
-const sendBtn = document.getElementById("sendBtn");
-const successes = document.querySelectorAll(".success"); 
+    // Click label -> Kích hoạt class active để ô nhập trượt xuống mượt mà
+    userLabel.onclick = () => {
+        userBox.classList.add("active");
+        userInput.focus();
+    };
 
-// Bấm vào nút Username -> Kích hoạt class active để ô nhập trượt ra
-userLabel.onclick = () => {
-    userBox.classList.add("active");
-    userInput.focus();
-};
-
-// Bấm ra ngoài khi chưa nhập gì -> tự động thu nhỏ lại
-userInput.addEventListener("blur", () => {
-    if (userInput.value.trim() === "") {
-        userBox.classList.remove("active");
-    }
-});
-
-// Xử lý khi bấm nút <style> vào Google Form
-sendBtn.onclick = async () => {
-    const usernameVal = userInput.value.trim();
-    
-    if (usernameVal === "") {
-        alert("Vui lòng nhập Username trước khi gửi!");
-        return;
-    }
-
-    // Đổi trạng thái nút bấm
-    sendBtn.querySelector("span").textContent = "⏳ Đang gửi...";
-    sendBtn.style.pointerEvents = "none";
-
-    // Cấu hình link Google Form của bạn
-    const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfG7iWgzj-vkOufppbVaXIyWv6227w7ZDpeArwfEhl02hp--Q/formResponse";
-    const formData = new FormData();
-    formData.append("entry.1432806072", usernameVal);
-
-    try {
-        // Gửi ngầm dữ liệu lên Google Form công khai
-        await fetch(formUrl, {
-            method: "POST",
-            body: formData,
-            mode: "no-cors"
-        });
-
-        // Hiện TẤT CẢ các thông báo thành công (.success) cùng lúc
-        successes.forEach(success => {
-            success.classList.add("show");
-        });
-
-        // Ẩn thông báo đi sau 3 giây
-        setTimeout(() => {
-            successes.forEach(success => {
-                success.classList.remove("show");
-            });
-        }, 3000);
-
-        // Reset lại ô nhập dữ liệu
-        userInput.value = "";
-        userBox.classList.remove("active");
-
-    } catch (error) {
-        console.error("Lỗi:", error);
-        alert("Có lỗi xảy ra khi gửi, vui lòng thử lại!");
-    } finally {
-        // Trả nút bấm về trạng thái ban đầu
-        sendBtn.querySelector("span").textContent = "🚀 Gửi Username";
-        sendBtn.style.pointerEvents = "auto";
-    }
-};
-
-userInput.addEventListener("blur", () => {
-    if(userInput.value.trim() === ""){
-        userBox.classList.remove("active");
-    }
-});
-
-document.getElementById("sendBtn").onclick=async()=>{
-}
-
-    const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfG7iWgzj-vkOufppbVaXIyWv6227w7ZDpeArwfEhl02hp--Q/formResponse";
-
-const ENTRY_ID = "entry.1432806072";
-
-const success = document.getElementById(".success");
-
-sendBtn.onclick = async () => {
-
-    const username = document.getElementById("username").value.trim();
-
-    if(username === ""){
-        alert("Vui lòng nhập Username!");
-        return;
-    }
-
-    const formData = new FormData();
-    formData.append(ENTRY_ID, username);
-
-    try{
-
-        await fetch(FORM_URL,{
-            method:"POST",
-            mode:"no-cors",
-            body:formData
-        });
-successes.forEach(success => {
-    success.textContent = "✅ Đã gửi thành công";
-    success.classList.add("show");
-});
-
-setTimeout(() => {
-    successes.forEach(success => {
-        success.classList.remove("show");
+    // Bấm ra ngoài khi trống -> Tự thu gọn lại
+    userInput.addEventListener("blur", () => {
+        if (userInput.value.trim() === "") {
+            userBox.classList.remove("active");
+        }
     });
-}, 2500);
-      
-      document.getElementById("username").value = "";
 
-        setTimeout(()=>{
-            success.classList.remove("show");
-        },2500);
+    // Sự kiện Click Gửi thẳng vào Google Forms của bạn
+    sendBtn.onclick = async () => {
+        const usernameVal = userInput.value.trim();
 
-    }catch(err){
+        if (usernameVal === "") {
+            alert("Vui lòng nhập Username trước khi gửi!");
+            return;
+        }
 
-        alert("Không thể gửi dữ liệu!");
+        // Đổi trạng thái nút bấm tránh spam liên tục
+        sendBtn.querySelector("span").textContent = "⏳ Đang gửi...";
+        sendBtn.style.pointerEvents = "none";
 
-        console.error(err);
+        // Cấu hình link xử lý ngầm và ID câu hỏi Google Form của bạn
+        const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfG7iWgzj-vkOufppbVaXIyWv6227w7ZDpeArwfEhl02hp--Q/formResponse";
+        const formData = new FormData();
+        formData.append("entry.1432806072", usernameVal);
 
-    }
+        try {
+            // Chế độ 'no-cors' giúp chạy trơn tru trên GitHub Pages mà không sợ bị chặn bảo mật
+            await fetch(formUrl, {
+                method: "POST",
+                body: formData,
+                mode: "no-cors"
+            });
 
-};
+            // Hiện thông báo thành công phát sáng trượt ra từ bên phải màn hình
+            successNotification.textContent = "✅ Đã gửi thành công";
+            successNotification.classList.add("show");
 
-    success.textContent = "✅ Đã gửi thành công";
-    success.classList.add("show");
+            // Reset trạng thái form nhập liệu
+            userInput.value = "";
+            userBox.classList.remove("active");
 
-    document.getElementById("username").value = "";
+            // Tự động ẩn thông báo thành công sau 2.5 giây
+            setTimeout(() => {
+                successNotification.classList.remove("show");
+            }, 2500);
 
-    setTimeout(()=>{
-        success.classList.remove("show");
-    },2500);
-
-};
-
-    // JavaScript điều khiển riêng biệt cho Clan
-const clanBox = document.getElementById("clanUserBox");
-const clanLabel = document.getElementById("clanUserLabel");
-const clanInput = document.getElementById("clanUserInput");
-const clanSendBtn = document.getElementById("clanSendBtn");
-const clanSuccesses = document.querySelectorAll(".success");
-
-// Click chữ Username -> Mở ô nhập trượt ra
-clanLabel.onclick = () => {
-    clanBox.classList.add("active");
-    clanInput.focus();
-};
-
-// Bấm ra ngoài khi trống -> Tự thu lại
-clanInput.addEventListener("blur", () => {
-    if (clanInput.value.trim() === "") {
-        clanBox.classList.remove("active");
-    }
-});
-
-// Xử lý nút gửi thẳng dữ liệu vào Google Form của bạn
-clanSendBtn.onclick = async () => {
-    const usernameVal = clanInput.value.trim();
-    
-    if (usernameVal === "") {
-        alert("Vui lòng nhập Username trước khi gửi!");
-        return;
-    }
-
-    clanSendBtn.querySelector("span").textContent = "⏳ Đang gửi...";
-    clanSendBtn.style.pointerEvents = "none";
-
-    // Link Google Form chuẩn của bạn
-    const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfG7iWgzj-vkOufppbVaXIyWv6227w7ZDpeArwfEhl02hp--Q/formResponse";
-    const formData = new FormData();
-    formData.append("entry.1432806072", usernameVal);
-
-    try {
-        await fetch(formUrl, {
-            method: "POST",
-            body: formData,
-            mode: "no-cors"
-        });
-
-        // Hiện cả 2 thông báo cùng lúc
-        clanSuccesses.forEach(el => el.classList.add("show"));
-
-        setTimeout(() => {
-            clanSuccesses.forEach(el => el.classList.remove("show"));
-        }, 3000);
-
-        clanInput.value = "";
-        clanBox.classList.remove("active");
-
-    } catch (error) {
-        console.error(error);
-        alert("Lỗi gửi dữ liệu!");
-    } finally {
-        clanSendBtn.querySelector("span").textContent = "🚀 Gửi Username";
-        clanSendBtn.style.pointerEvents = "auto";
-    }
-};
-
+        } catch (error) {
+            console.error("Lỗi:", error);
+            alert("Có lỗi xảy ra khi gửi, vui lòng thử lại!");
+        } finally {
+            // Trả lại nút bấm trạng thái ban đầu
+            sendBtn.querySelector("span").textContent = "🚀 Gửi Username";
+            sendBtn.style.pointerEvents = "auto";
+        }
+    };
   </script>
 </body>
 </html>
