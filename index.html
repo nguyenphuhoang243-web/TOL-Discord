@@ -5,8 +5,89 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Discord Server Landing Page</title>
   <style>
+
+    /* Nút gửi đồng bộ style */
+.send-btn {
+    width: 100%;
+    margin: 18px auto 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    border-radius: 16px;
+    cursor: pointer;
+    color: white;
+    font-size: 17px;
+    font-weight: 700;
+    user-select: none;
+    background: linear-gradient(135 deg, #7b2ff7, #3b82f6);
+    box-shadow: 0 0 20px rgba(123, 47, 247, .45), 0 0 40px rgba(59, 130, 246, .35);
+    transition: .3s;
+}
+
+.send-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 0 35px #7b2ff7, 0 0 55px #3b82f6;
+}
+
+.send-btn:active {
+    transform: scale(.96);
+    transition: .1s;
+}
+
+.send-btn span {
+    pointer-events: none;
+}
+
+/* Thông báo Toast kiểu Discord */
+.toast-notification {
+    position: fixed;
+    top: 20px;
+    right: -400px; /* Ban đầu ẩn bên ngoài */
+    background: #23a55a; /* Màu xanh lá Discord */
+    color: white;
+    padding: 16px 24px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3), 0 0 20px rgba(35, 165, 90, 0.4);
+    z-index: 9999;
+    transition: right 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.toast-notification.show {
+    right: 20px; /* Trượt vào màn hình */
+}
+
+.toast-icon {
+    font-size: 20px;
+    font-weight: bold;
+    background: rgba(255, 255, 255, 0.2);
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.toast-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.toast-title {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.toast-desc {
+    font-size: 13px;
+    opacity: 0.9;
+}
     
-#success{
+.success{
     position:fixed;
     top:30px;
     right:-400px;
@@ -25,7 +106,7 @@
     transition:.45s;
 }
 
-#success.show{
+.success.show{
     right:30px;
 }
 
@@ -855,14 +936,22 @@
     <div class="username-box reveal">
     <div class="username-label">Username</div>
     <input type="text" id="username" placeholder="Nhập username...">
-</div>
-<div class="send-btn" id="sendBtn">
-    <span>🚀 Gửi Username</span>
-</div>
+    
+    <!-- Nút Gửi xịn đồng bộ -->
+    <div class="send-btn" id="sendBtn">
+        <span>🚀 Gửi Username</span>
+    </div>
 
-<div id="success">
-✅ Đã gửi thành công
+    <!-- Thông báo kiểu Discord trượt hiện lên ở góc -->
+    <div class="toast-notification" id="successToast">
+        <div class="toast-icon">✓</div>
+        <div class="toast-content">
+            <span class="toast-title">Thành công</span>
+            <span class="toast-desc">Đã gửi thành công!</span>
+        </div>
+    </div>
 </div>
+    
     <div class="stack-heading reveal">
       <div class="badge">Immersive Scroll</div>
       <h3>Cuộn xuống là thấy hiệu ứng “ghép lớp” ngay</h3>
@@ -1034,7 +1123,7 @@ document.getElementById("sendBtn").onclick=async()=>{
 
 const ENTRY_ID = "entry.1432806072";
 
-const success = document.getElementById("success");
+const success = document.getElementById(".success");
 
 sendBtn.onclick = async () => {
 
@@ -1055,11 +1144,18 @@ sendBtn.onclick = async () => {
             mode:"no-cors",
             body:formData
         });
+successes.forEach(success => {
+    success.textContent = "✅ Đã gửi thành công";
+    success.classList.add("show");
+});
 
-        success.textContent = "✅ Đã gửi thành công";
-        success.classList.add("show");
-
-        document.getElementById("username").value = "";
+setTimeout(() => {
+    successes.forEach(success => {
+        success.classList.remove("show");
+    });
+}, 2500);
+      
+      document.getElementById("username").value = "";
 
         setTimeout(()=>{
             success.classList.remove("show");
