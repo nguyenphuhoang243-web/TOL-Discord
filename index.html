@@ -1029,7 +1029,10 @@ userInput.addEventListener("blur", () => {
 
 document.getElementById("sendBtn").onclick=async()=>{
 }
-const url="https://script.google.com/macros/s/AKfycbzfMRjLdvyD9hbHyfFak9m_dPOUU1aSR0MyN-TpREo2qh51eXEYMQvOVB5KWP6I_dbW/exec";
+
+    const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSfG7iWgzj-vkOufppbVaXIyWv6227w7ZDpeArwfEhl02hp--Q/formResponse";
+
+const ENTRY_ID = "entry.1432806072";
 
 const success = document.getElementById("success");
 
@@ -1042,12 +1045,35 @@ sendBtn.onclick = async () => {
         return;
     }
 
-    await fetch(url,{
-        method:"POST",
-        body:JSON.stringify({
-            username:username
-        })
-    });
+    const formData = new FormData();
+    formData.append(ENTRY_ID, username);
+
+    try{
+
+        await fetch(FORM_URL,{
+            method:"POST",
+            mode:"no-cors",
+            body:formData
+        });
+
+        success.textContent = "✅ Đã gửi thành công";
+        success.classList.add("show");
+
+        document.getElementById("username").value = "";
+
+        setTimeout(()=>{
+            success.classList.remove("show");
+        },2500);
+
+    }catch(err){
+
+        alert("Không thể gửi dữ liệu!");
+
+        console.error(err);
+
+    }
+
+};
 
     success.textContent = "✅ Đã gửi thành công";
     success.classList.add("show");
