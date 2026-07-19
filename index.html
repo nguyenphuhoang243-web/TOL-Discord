@@ -5,6 +5,158 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Discord Server Landing Page</title>
   <style>
+    
+#success{
+    position:fixed;
+    top:30px;
+    right:-400px;
+
+    padding:15px 25px;
+
+    border-radius:14px;
+
+    color:white;
+    font-weight:bold;
+
+    background:linear-gradient(135deg,#19c37d,#22c55e);
+
+    box-shadow:0 0 25px rgba(34,197,94,.5);
+
+    transition:.45s;
+}
+
+#success.show{
+    right:30px;
+}
+
+    .username-box{
+    width:340px;
+    margin:0 auto 50px;
+    position:relative;
+}
+
+.username-label{
+    width:100%;
+    padding:16px;
+    text-align:center;
+    color:white;
+    font-weight:bold;
+    border-radius:16px;
+    cursor:pointer;
+
+    background:linear-gradient(135deg,#7b2ff7,#3b82f6);
+
+    box-shadow:
+    0 0 20px rgba(123,47,247,.5),
+    0 0 35px rgba(59,130,246,.4);
+
+    transition:.35s;
+}
+
+.username-box input{
+    width:100%;
+    margin-top:10px;
+    height:0;
+    opacity:0;
+
+    border:none;
+    outline:none;
+
+    border-radius:14px;
+
+    background:rgba(255,255,255,.08);
+
+    color:white;
+
+    padding:0 18px;
+
+    transition:.35s;
+
+    backdrop-filter:blur(12px);
+}
+
+.username-box.active input{
+
+    height:54px;
+
+    opacity:1;
+
+    padding:0 18px;
+
+    border:2px solid transparent;
+
+    background:
+    linear-gradient(rgba(20,20,40,.9),rgba(20,20,40,.9)) padding-box,
+    linear-gradient(135deg,#7b2ff7,#3b82f6) border-box;
+
+    box-shadow:
+    0 0 15px #7b2ff7,
+    0 0 30px #3b82f6;
+}
+
+.username-box.active .username-label{
+
+    transform:
+    translateY(-10px)
+    scale(.92);
+
+    box-shadow:
+    0 0 25px #7b2ff7,
+    0 0 45px #3b82f6;
+}
+
+    .send-btn{
+    width:340px;
+    margin:18px auto 0;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    padding:16px;
+
+    border-radius:16px;
+
+    cursor:pointer;
+
+    color:white;
+    font-size:17px;
+    font-weight:700;
+
+    user-select:none;
+
+    background:linear-gradient(135deg,#7b2ff7,#3b82f6);
+
+    box-shadow:
+    0 0 20px rgba(123,47,247,.45),
+    0 0 40px rgba(59,130,246,.35);
+
+    transition:.3s;
+}
+
+.send-btn:hover{
+
+    transform:
+    translateY(-3px)
+    scale(1.03);
+
+    box-shadow:
+    0 0 35px #7b2ff7,
+    0 0 55px #3b82f6;
+}
+
+.send-btn:active{
+
+    transform:
+    scale(.96);
+
+    transition:.1s;
+}
+
+.send-btn span{
+    pointer-events:none;
+}
+
     :root {
       --bg: #07111f;
       --panel: rgba(255, 255, 255, 0.08);
@@ -92,7 +244,7 @@
       top: 50%;
     }
 
-    .hero, .section, .floating-btn {
+    .hero, .section, .floating-btn, .loader-section {
       position: relative;
       z-index: 1;
     }
@@ -236,6 +388,30 @@
       border: none;
       overflow: hidden;
       position: relative;
+      isolation: isolate;
+      transform-origin: center;
+    }
+
+    .slime-btn {
+      transition: transform 0.22s ease, box-shadow 0.25s ease, background 0.25s ease, filter 0.22s ease;
+      will-change: transform;
+    }
+
+    .slime-btn::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(circle at var(--slime-x, 50%) var(--slime-y, 50%), rgba(255,255,255,0.32), rgba(255,255,255,0) 62%);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    .slime-btn:hover::after,
+    .slime-btn.is-active::after {
+      opacity: 1;
     }
 
     .btn::before {
@@ -515,6 +691,102 @@
       100% { background-position: 200% center; }
     }
 
+    /* From Uiverse.io by alexruix — adapted for Discord theme */
+    .loader-section {
+      display: flex;
+      justify-content: center;
+      width: 100%;
+      margin: 8px auto 28px;
+      padding: 0 20px;
+      overflow: visible;
+    }
+
+    .loader-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 220px;
+      min-height: 220px;
+      padding: 24px 32px;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+    }
+
+    .loader {
+      position: relative;
+      width: 120px;
+      height: 180px;
+      overflow: visible;
+      transform: scale(1.25);
+      transform-origin: center center;
+    }
+
+    .loader::before {
+      content: "";
+      position: absolute;
+      bottom: 30px;
+      left: 50px;
+      height: 30px;
+      width: 30px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 0 18px rgba(88, 101, 242, 0.55);
+      animation: loading-bounce 0.5s ease-in-out infinite alternate;
+    }
+
+    .loader::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 7px;
+      width: 45px;
+      border-radius: 4px;
+      box-shadow:
+        0 5px 0 #f2f2f2,
+        -35px 50px 0 #f2f2f2,
+        -70px 95px 0 #f2f2f2;
+      animation: loading-step 1s ease-in-out infinite;
+    }
+
+    @keyframes loading-bounce {
+      0% {
+        transform: scale(1, 0.7);
+      }
+
+      40% {
+        transform: scale(0.8, 1.2);
+      }
+
+      60% {
+        transform: scale(1, 1);
+      }
+
+      100% {
+        bottom: 140px;
+      }
+    }
+
+    @keyframes loading-step {
+      0% {
+        box-shadow:
+          0 10px 0 rgba(0, 0, 0, 0),
+          0 10px 0 #f2f2f2,
+          -35px 50px 0 #f2f2f2,
+          -70px 90px 0 #f2f2f2;
+      }
+
+      100% {
+        box-shadow:
+          0 10px 0 #f2f2f2,
+          -35px 50px 0 #f2f2f2,
+          -70px 90px 0 #f2f2f2,
+          -70px 90px 0 rgba(0, 0, 0, 0);
+      }
+    }
+
     @media (max-width: 800px) {
       .container {
         grid-template-columns: 1fr;
@@ -546,7 +818,7 @@
           Từ game,chill cùng nhau — đây là nơi bạn có thể giao lưu, tìm bạn và cùng nhau tạo nên những trải nghiệm thật vui.
         </p>
         <div class="actions">
-          <a class="btn btn-primary" href="https://discord.gg/KxTA7enpY" target="_blank" rel="noopener noreferrer">Tham gia ngay</a>
+          <a id="joinBtn" class="btn btn-primary slime-btn" href="https://discord.gg/KxTA7enpY" target="_blank" rel="noopener noreferrer">Tham gia ngay</a>
           <a class="btn btn-secondary" href="https://nguyenphuhoang243-web.github.io/Rule-For-Discord-Server/">Xem luật máy chủ</a>
           <a class="btn btn-secondary" href="#about">Khám phá thêm</a>
         </div>
@@ -580,6 +852,17 @@
   </section>
 
   <section class="section stack-stage" id="about">
+    <div class="username-box reveal">
+    <div class="username-label">Username</div>
+    <input type="text" id="username" placeholder="Nhập username...">
+</div>
+<div class="send-btn" id="sendBtn">
+    <span>🚀 Gửi Username</span>
+</div>
+
+<div id="success">
+✅ Đã gửi thành công
+</div>
     <div class="stack-heading reveal">
       <div class="badge">Immersive Scroll</div>
       <h3>Cuộn xuống là thấy hiệu ứng “ghép lớp” ngay</h3>
@@ -629,6 +912,7 @@
 
   <script>
     const floatingBtn = document.getElementById('floatingInvite');
+    const joinBtn = document.getElementById('joinBtn');
     const cursorGlow = document.getElementById('cursorGlow');
     const scrollProgress = document.getElementById('scrollProgress');
     const revealElements = document.querySelectorAll('.reveal');
@@ -673,6 +957,43 @@
       });
     });
 
+    const resetJoinButton = () => {
+      if (!joinBtn) return;
+      joinBtn.classList.remove('is-active');
+      joinBtn.style.transform = '';
+      joinBtn.style.setProperty('--slime-x', '50%');
+      joinBtn.style.setProperty('--slime-y', '50%');
+    };
+
+    const updateJoinButton = (event) => {
+      if (!joinBtn) return;
+      const rect = joinBtn.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+      const px = (x / rect.width - 0.5) * 2;
+      const py = (y / rect.height - 0.5) * 2;
+      const stretchX = 1 + Math.min(0.16, Math.max(-0.1, px * 0.12));
+      const stretchY = 1 + Math.min(0.16, Math.max(-0.1, -py * 0.13));
+      const translateX = px * 3.5;
+      const translateY = -3 + py * 2.5;
+
+      joinBtn.classList.add('is-active');
+      joinBtn.style.setProperty('--slime-x', `${(x / rect.width) * 100}%`);
+      joinBtn.style.setProperty('--slime-y', `${(y / rect.height) * 100}%`);
+      joinBtn.style.transform = `translate(${translateX}px, ${translateY}px) scaleX(${stretchX}) scaleY(${stretchY})`;
+    };
+
+    if (joinBtn) {
+      joinBtn.addEventListener('pointerenter', (event) => updateJoinButton(event));
+      joinBtn.addEventListener('pointermove', (event) => updateJoinButton(event));
+      joinBtn.addEventListener('pointerleave', resetJoinButton);
+      joinBtn.addEventListener('pointerdown', () => {
+        joinBtn.style.transform = 'translateY(1px) scaleX(0.96) scaleY(0.94)';
+      });
+      joinBtn.addEventListener('pointerup', (event) => updateJoinButton(event));
+      joinBtn.addEventListener('pointercancel', resetJoinButton);
+    }
+
     const updateGlow = (x, y) => {
       cursorGlow.style.left = `${x}px`;
       cursorGlow.style.top = `${y}px`;
@@ -690,6 +1011,55 @@
         updateGlow(touch.clientX, touch.clientY);
       }
     }, { passive: true });
+
+    const userBox = document.querySelector(".username-box");
+const userLabel = document.querySelector(".username-label");
+const userInput = document.getElementById("username");
+
+userLabel.onclick = () => {
+    userBox.classList.add("active");
+    userInput.focus();
+};
+
+userInput.addEventListener("blur", () => {
+    if(userInput.value.trim() === ""){
+        userBox.classList.remove("active");
+    }
+});
+
+document.getElementById("sendBtn").onclick=async()=>{
+}
+const url="https://script.google.com/macros/s/AKfycbzfMRjLdvyD9hbHyfFak9m_dPOUU1aSR0MyN-TpREo2qh51eXEYMQvOVB5KWP6I_dbW/exec";
+
+const success = document.getElementById("success");
+
+sendBtn.onclick = async () => {
+
+    const username = document.getElementById("username").value.trim();
+
+    if(username === ""){
+        alert("Vui lòng nhập Username!");
+        return;
+    }
+
+    await fetch(url,{
+        method:"POST",
+        body:JSON.stringify({
+            username:username
+        })
+    });
+
+    success.textContent = "✅ Đã gửi thành công";
+    success.classList.add("show");
+
+    document.getElementById("username").value = "";
+
+    setTimeout(()=>{
+        success.classList.remove("show");
+    },2500);
+
+};
+
   </script>
 </body>
 </html>
