@@ -5,6 +5,87 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Discord Server Landing Page</title>
   <style>
+    /* CSS Sửa lỗi hiển thị - Dán vào cuối thẻ style */
+.username-box {
+    width: 340px;
+    margin: 0 auto 30px;
+    position: relative;
+    text-align: center;
+}
+
+.username-label {
+    width: 100%;
+    padding: 16px;
+    color: white;
+    font-weight: bold;
+    border-radius: 16px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #7b2ff7, #3b82f6);
+    box-shadow: 0 0 20px rgba(123, 47, 247, .5), 0 0 35px rgba(59, 130, 246, .4);
+    transition: .35s;
+}
+
+.username-box input {
+    width: 100%;
+    margin-top: 12px;
+    height: 0;
+    opacity: 0;
+    border: none;
+    outline: none;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, .08);
+    color: white;
+    padding: 0 18px;
+    transition: .35s;
+    backdrop-filter: blur(12px);
+}
+
+/* Kích hoạt hiển thị ô nhập khi active */
+.username-box.active input {
+    height: 54px;
+    opacity: 1;
+    padding: 0 18px;
+    border: 2px solid transparent;
+    background: linear-gradient(rgba(20, 20, 40, .9), rgba(20, 20, 40, .9)) padding-box, linear-gradient(135deg, #7b2ff7, #3b82f6) border-box;
+    box-shadow: 0 0 15px #7b2ff7, 0 0 30px #3b82f6;
+}
+
+.username-box.active .username-label {
+    transform: translateY(-5px) scale(.95);
+}
+
+/* Nút gửi */
+.send-btn {
+    width: 100%;
+    margin-top: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 16px;
+    border-radius: 16px;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    background: linear-gradient(135deg, #7b2ff7, #3b82f6);
+    box-shadow: 0 0 20px rgba(123, 47, 247, .45), 0 0 40px rgba(59, 130, 246, .35);
+    transition: .3s;
+}
+.send-btn:hover { transform: translateY(-3px); box-shadow: 0 0 35px #7b2ff7, 0 0 55px #3b82f6; }
+.send-btn span { pointer-events: none; }
+
+/* CSS cho 2 thông báo success */
+.success {
+    display: none;
+    margin-top: 12px;
+    padding: 12px;
+    background: #19c37d;
+    color: white;
+    border-radius: 10px;
+    font-weight: bold;
+}
+.success.show {
+    display: block;
+}
 
     /* Nút gửi đồng bộ style */
 .send-btn {
@@ -938,10 +1019,18 @@
     <input type="text" id="username" placeholder="Nhập username...">
     
     <!-- Nút Gửi xịn đồng bộ -->
-    <div class="send-btn" id="sendBtn">
+   <!-- CỤM USERNAME CHO CLAN - COPY ĐÈ TOÀN BỘ -->
+<div class="username-box" id="clanUserBox">
+    <div class="username-label" id="clanUserLabel">Username</div>
+    <input type="text" id="clanUserInput" placeholder="Nhập username...">
+    
+    <!-- Nút Gửi Username -->
+    <div class="send-btn" id="clanSendBtn">
         <span>🚀 Gửi Username</span>
     </div>
-      <div class="success">✅ Đã gửi thành công</div>
+
+    <!-- 2 Thông báo thành công đổi sang class -->
+    <div class="success">✅ Đã gửi thành công</div>
     <div class="success">✅ Đã gửi thành công</div>
 </div>
 
@@ -1128,7 +1217,7 @@ userInput.addEventListener("blur", () => {
     }
 });
 
-// Xử lý khi bấm nút Gửi Username vào Google Form
+// Xử lý khi bấm nút <style> vào Google Form
 sendBtn.onclick = async () => {
     const usernameVal = userInput.value.trim();
     
@@ -1250,6 +1339,69 @@ setTimeout(() => {
         success.classList.remove("show");
     },2500);
 
+};
+
+    // JavaScript điều khiển riêng biệt cho Clan
+const clanBox = document.getElementById("clanUserBox");
+const clanLabel = document.getElementById("clanUserLabel");
+const clanInput = document.getElementById("clanUserInput");
+const clanSendBtn = document.getElementById("clanSendBtn");
+const clanSuccesses = document.querySelectorAll(".success");
+
+// Click chữ Username -> Mở ô nhập trượt ra
+clanLabel.onclick = () => {
+    clanBox.classList.add("active");
+    clanInput.focus();
+};
+
+// Bấm ra ngoài khi trống -> Tự thu lại
+clanInput.addEventListener("blur", () => {
+    if (clanInput.value.trim() === "") {
+        clanBox.classList.remove("active");
+    }
+});
+
+// Xử lý nút gửi thẳng dữ liệu vào Google Form của bạn
+clanSendBtn.onclick = async () => {
+    const usernameVal = clanInput.value.trim();
+    
+    if (usernameVal === "") {
+        alert("Vui lòng nhập Username trước khi gửi!");
+        return;
+    }
+
+    clanSendBtn.querySelector("span").textContent = "⏳ Đang gửi...";
+    clanSendBtn.style.pointerEvents = "none";
+
+    // Link Google Form chuẩn của bạn
+    const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfG7iWgzj-vkOufppbVaXIyWv6227w7ZDpeArwfEhl02hp--Q/formResponse";
+    const formData = new FormData();
+    formData.append("entry.1432806072", usernameVal);
+
+    try {
+        await fetch(formUrl, {
+            method: "POST",
+            body: formData,
+            mode: "no-cors"
+        });
+
+        // Hiện cả 2 thông báo cùng lúc
+        clanSuccesses.forEach(el => el.classList.add("show"));
+
+        setTimeout(() => {
+            clanSuccesses.forEach(el => el.classList.remove("show"));
+        }, 3000);
+
+        clanInput.value = "";
+        clanBox.classList.remove("active");
+
+    } catch (error) {
+        console.error(error);
+        alert("Lỗi gửi dữ liệu!");
+    } finally {
+        clanSendBtn.querySelector("span").textContent = "🚀 Gửi Username";
+        clanSendBtn.style.pointerEvents = "auto";
+    }
 };
 
   </script>
