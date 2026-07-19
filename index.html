@@ -1,10 +1,374 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+  <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
+
+<script>
+const lenis = new Lenis({
+  duration: 1.2,
+  smoothWheel: true,
+  wheelMultiplier: 1,
+  touchMultiplier: 2,
+  infinite: false
+});
+
+function raf(time) {
+  lenis.raf(time);
+  requestAnimationFrame(raf);
+}
+
+requestAnimationFrame(raf);
+</script>
+
+<body>
+
+<!-- NÚT ĐỔI THEME GIỮ NGUYÊN HIỆU ỨNG HẠT LẤP LÁNH -->
+<div class="toggle-cont position-theme-toggle" id="themeContainer">
+  <input type="checkbox" id="themeToggle" class="toggle-input">
+  <label for="themeToggle" class="toggle-label">
+    <div class="cont-icon">
+      <!-- Các hạt lấp lánh hoạt ảnh (sparkles) -->
+      <span class="sparkle" style="--deg: 0; --duration: 1;"></span>
+      <span class="sparkle" style="--deg: 45; --duration: 1.5;"></span>
+      <span class="sparkle" style="--deg: 90; --duration: 1.2;"></span>
+      <span class="sparkle" style="--deg: 135; --duration: 1.8;"></span>
+      <span class="sparkle" style="--deg: 180; --duration: 1.1;"></span>
+      <span class="sparkle" style="--deg: 225; --duration: 1.4;"></span>
+      <span class="sparkle" style="--deg: 270; --duration: 1.6;"></span>
+      <span class="sparkle" style="--deg: 315; --duration: 1.3;"></span>
+      
+      <!-- Icon Mặt trăng và Mặt trời -->
+      <svg class="icon svg-moon" viewBox="0 0 24 24" style="position: absolute; width: 1.1rem; fill: #d9d9d9; transition: opacity 0.3s;"><path d="M12 3c.132 0 .263 0 .393.007a7.5 7.5 0 0 0 7.92 12.446A9 9 0 1 1 12 3z"/></svg>
+      <svg class="icon svg-sun" viewBox="0 0 24 24" style="position: absolute; width: 1.1rem; fill: #dfe6ff; opacity: 0; transition: opacity 0.3s;"><path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zM2 13h2v-2H2v2zm18 0h2v-2h-2v2zM11 2v2h2V2h-2zm0 18v2h2v-2h-2zM5.99 4.58 4.58 5.99l1.41 1.41 1.41-1.41-1.41-1.41zm12.02 12.02-1.41 1.41 1.41 1.41 1.41-1.41-1.41-1.41zM7.41 16.59 5.99 18.01l1.41 1.41 1.41-1.41-1.41-1.41zM18.01 5.99l1.41-1.41-1.41-1.41-1.41 1.41 1.41 1.41z"/></svg>
+    </div>
+  </label>
+</div>
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Discord Server Landing Page</title>
   <style>
+    html,
+body {
+  scroll-behavior: auto !important;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+    /* --- VỊ TRÍ NÚT TRÊN ĐẦU BÊN PHẢI --- */
+.position-theme-toggle {
+  position: absolute !important; /* Đổi từ fixed sang absolute để nút đứng yên tại chỗ */
+  top: 25px !important;
+  right: 25px !important;
+  left: auto !important;
+  z-index: 10000 !important;
+  transform: scale(0.85);
+}
+
+/* --- ĐOẠN CSS GỐC CỦA BẠN (ĐÃ GIỮ NGUYÊN HIỆU ỨNG SPARKLE) --- */
+.toggle-cont {
+  --primary: #54a8fc;
+  --light: #d9d9d9;
+  --dark: #121212;
+  --gray: #414344;
+  position: relative;
+  z-index: 10;
+  width: fit-content;
+  height: 50px;
+  border-radius: 9999px;
+}
+.toggle-cont .toggle-input { display: none; }
+.toggle-cont .toggle-label {
+  --gap: 5px;
+  --width: 50px;
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  padding: 0.5rem;
+  width: calc((var(--width) + var(--gap)) * 2);
+  height: 100%;
+  background-color: var(--dark);
+  border: 1px solid #777777;
+  border-bottom: 0;
+  border-radius: 9999px;
+  box-sizing: content-box;
+  transition: all 0.3s ease-in-out;
+}
+.toggle-label::before {
+  content: "";
+  position: absolute;
+  z-index: -10;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(100% + 1.5rem);
+  height: calc(100% + 1.5rem);
+  background-color: var(--gray);
+  border: 1px solid #777777;
+  border-bottom: 0;
+  border-radius: 9999px;
+  transition: all 0.3s ease-in-out;
+}
+.toggle-label::after {
+  content: "";
+  position: absolute;
+  z-index: -10;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(circle at 50% -100%, rgb(58, 155, 252) 0%, rgba(12, 12, 12, 1) 80%);
+  border-radius: 9999px;
+}
+.toggle-cont .toggle-label .cont-icon {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: var(--width);
+  height: 50px;
+  background-image: radial-gradient(circle at 50% 0%, #666666 0%, var(--gray) 100%);
+  border: 1px solid #aaaaaa;
+  border-bottom: 0;
+  border-radius: 9999px;
+  box-shadow: inset 0 -0.15rem 0.15rem var(--primary);
+  transition: transform 0.3s ease-in-out;
+}
+.cont-icon { overflow: clip; position: relative; }
+
+/* HOẠT ẢNH HẠT LẤP LÁNH (SPARKLE) */
+.cont-icon .sparkle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  width: calc(var(--width) * 0.08);
+  aspect-ratio: 1;
+  background-color: var(--light);
+  border-radius: 50%;
+  transform-origin: 50% 50%;
+  transform: translate(-50%, -50%) rotate(calc(1deg * var(--deg))) translateX(15px);
+  opacity: 0.6;
+}
+
+/* KHI NÚT ĐƯỢC CHỌN (GIAO DIỆN SÁNG) */
+.toggle-cont:has(.toggle-input:checked) .toggle-label {
+  background-color: #41434400;
+  border: 1px solid #3d6970;
+  border-bottom: 0;
+}
+.toggle-cont:has(.toggle-input:checked) .toggle-label::before {
+  box-shadow: 0 1rem 2.5rem -2rem #0080ff;
+}
+.toggle-cont:has(.toggle-input:checked) .toggle-label .cont-icon {
+  overflow: visible;
+  background-image: radial-gradient(circle at 50% 0%, #045ab1 0%, var(--primary) 100%);
+  border: 1px solid var(--primary);
+  border-bottom: 0;
+  transform: translateX(calc((var(--gap) * 2) + 100%)) rotate(-225deg);
+}
+
+/* Hiệu ứng hạt bắn bung ra ngoài khi bật chế độ sáng */
+.toggle-cont:has(.toggle-input:checked) .cont-icon .sparkle {
+  z-index: -10;
+  width: calc(var(--width) * 0.12);
+  background-color: #acacac;
+  animation: sparkle-burst 0.6s ease-out forwards;
+}
+
+@keyframes sparkle-burst {
+  0% {
+    transform: translate(-50%, -50%) rotate(calc(1deg * var(--deg))) translateX(10px);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(calc(1deg * var(--deg))) translateX(45px);
+    opacity: 0;
+  }
+}
+
+/* Ẩn hiện icon tương ứng */
+.toggle-cont:has(.toggle-input:checked) .svg-moon { opacity: 0; }
+.toggle-cont:has(.toggle-input:checked) .svg-sun { opacity: 1; transform: rotate(225deg); fill: #fff; }
+
+/* --- CÁC THAY ĐỔI MÀU NỀN SÁNG CHO TOÀN BỘ WEB --- */
+body.light-theme {
+  --bg: #f0f4f9;
+  --panel: rgba(0, 0, 0, 0.05);
+  --text: #1e293b;
+  --muted: #64748b;
+  background: 
+    radial-gradient(circle at top left, rgba(88, 101, 242, 0.15), transparent 30%),
+    linear-gradient(135deg, #e2e8f0 0%, #f1f5f9 50%, #ffffff 100%);
+  background-attachment: fixed;
+}
+body.light-theme h1 {
+  background: linear-gradient(90deg, #0f172a 0%, #1e293b 50%, #475569 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+body.light-theme .card,
+body.light-theme .panel,
+body.light-theme .loader-box {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+  color: #1e293b;
+}
+body.light-theme .username-box input {
+  background: rgba(0, 0, 0, 0.05);
+  color: #1e293b;
+}
+
+    /* --- ĐỊNH VỊ NÚT TOGGLE GÓC TRÊN BÊN PHẢI --- */
+.position-theme-toggle {
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  z-index: 10000;
+  transform: scale(0.85); /* Thu nhỏ xíu cho tinh tế vừa vặn */
+}
+
+/* --- DÁN ĐOẠN CSS CỦA BẠN VÀ CẤU HÌNH LIÊN KẾT THEME TẠI ĐÂY --- */
+.toggle-cont {
+  --primary: #54a8fc;
+  --light: #d9d9d9;
+  --dark: #121212;
+  --gray: #414344;
+  position: relative;
+  z-index: 10;
+  width: fit-content;
+  height: 50px;
+  border-radius: 9999px;
+}
+.toggle-cont .toggle-input { display: none; }
+.toggle-cont .toggle-label {
+  --gap: 5px;
+  --width: 50px;
+  cursor: pointer;
+  position: relative;
+  display: inline-block;
+  padding: 0.5rem;
+  width: calc((var(--width) + var(--gap)) * 2);
+  height: 100%;
+  background-color: var(--dark);
+  border: 1px solid #777777;
+  border-bottom: 0;
+  border-radius: 9999px;
+  box-sizing: content-box;
+  transition: all 0.3s ease-in-out;
+}
+.toggle-label::before {
+  content: "";
+  position: absolute;
+  z-index: -10;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(100% + 1.5rem);
+  height: calc(100% + 1.5rem);
+  background-color: var(--gray);
+  border: 1px solid #777777;
+  border-bottom: 0;
+  border-radius: 9999px;
+  transition: all 0.3s ease-in-out;
+}
+.toggle-label::after {
+  content: "";
+  position: absolute;
+  z-index: -10;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background-image: radial-gradient(circle at 50% -100%, rgb(58, 155, 252) 0%, rgba(12, 12, 12, 1) 80%);
+  border-radius: 9999px;
+}
+.toggle-cont .toggle-label .cont-icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  width: var(--width);
+  height: 50px;
+  background-image: radial-gradient(circle at 50% 0%, #666666 0%, var(--gray) 100%);
+  border: 1px solid #aaaaaa;
+  border-bottom: 0;
+  border-radius: 9999px;
+  box-shadow: inset 0 -0.15rem 0.15rem var(--primary);
+  transition: transform 0.3s ease-in-out;
+}
+.cont-icon { overflow: clip; position: relative; }
+
+/* Trạng thái KHI BẤM CHECKED (Đổi giao diện Sáng) */
+.toggle-cont:has(.toggle-input:checked) .toggle-label {
+  background-color: #41434400;
+  border: 1px solid #3d6970;
+  border-bottom: 0;
+}
+.toggle-cont:has(.toggle-input:checked) .toggle-label::before {
+  box-shadow: 0 1rem 2.5rem -2rem #0080ff;
+}
+.toggle-cont:has(.toggle-input:checked) .toggle-label .cont-icon {
+  overflow: visible;
+  background-image: radial-gradient(circle at 50% 0%, #045ab1 0%, var(--primary) 100%);
+  border: 1px solid var(--primary);
+  border-bottom: 0;
+  transform: translateX(calc((var(--gap) * 2) + 100%)) rotate(-225deg);
+}
+
+/* Xử lý ẩn hiện Icon SVG tương ứng khi xoay nút */
+.toggle-cont:has(.toggle-input:checked) .svg-moon { opacity: 0; }
+.toggle-cont:has(.toggle-input:checked) .svg-sun { opacity: 1; transform: rotate(225deg); fill: #fff; }
+
+/* --- ĐỔI TOÀN BỘ GIAO DIỆN WEB SANG LỚP MÀU SÁNG --- */
+body.light-theme {
+  --bg: #f0f4f9;
+  --panel: rgba(0, 0, 0, 0.05);
+  --text: #1e293b;
+  --muted: #64748b;
+  background: 
+    radial-gradient(circle at top left, rgba(88, 101, 242, 0.15), transparent 30%),
+    linear-gradient(135deg, #e2e8f0 0%, #f1f5f9 50%, #ffffff 100%);
+  background-attachment: fixed;
+}
+body.light-theme h1 {
+  background: linear-gradient(90deg, #0f172a 0%, #1e293b 50%, #475569 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+body.light-theme .card,
+body.light-theme .panel,
+body.light-theme .loader-box,
+body.light-theme .stack-card {
+  background: rgba(255, 255, 255, 0.8);
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+  color: #1e293b;
+}
+body.light-theme .loader::after {
+  box-shadow: 0 5px 0 #1e293b, -35px 50px 0 #1e293b, -70px 95px 0 #1e293b;
+}
+body.light-theme .username-box input {
+  background: rgba(0, 0, 0, 0.05);
+  color: #1e293b;
+}
+body.light-theme .username-box.active input {
+  background: linear-gradient(#ffffff, #ffffff) padding-box, linear-gradient(135deg, #7b2ff7, #3b82f6) border-box;
+}
     
 #success{
     position:fixed;
@@ -803,6 +1167,7 @@
   </style>
 </head>
 <body>
+
   <div class="cursor-glow" id="cursorGlow"></div>
   <div class="ambient-particles" aria-hidden="true">
     <span></span><span></span><span></span><span></span><span></span>
@@ -911,6 +1276,18 @@
   </div>
 
   <script>
+
+    // --- ĐIỀU KHIỂN NÚT CHUYỂN ĐỔI THEME GIAO DIỆN ---
+    const themeToggleInput = document.getElementById('themeToggle');
+    
+    themeToggleInput.addEventListener('change', () => {
+      if (themeToggleInput.checked) {
+        document.body.classList.add('light-theme');
+      } else {
+        document.body.classList.remove('light-theme');
+      }
+    });
+
 const floatingBtn = document.getElementById('floatingInvite');
     const joinBtn = document.getElementById('joinBtn');
     const cursorGlow = document.getElementById('cursorGlow');
