@@ -152,6 +152,53 @@ if (movingObject) {
   
   <style>
 
+    /* From Uiverse.io by Creatlydev - Customized for YouTube */ 
+.btn-youtube {
+  cursor: pointer;
+  display: inline-flex; /* Giúp nút không bị dài hết màn hình khi dùng thẻ <a> */
+  align-items: center;  /* Căn giữa icon và chữ theo chiều dọc */
+  gap: 0.5rem;
+  border: none;
+  text-decoration: none; /* Xóa dấu gạch chân mặc định của thẻ link */
+
+  transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+  border-radius: 100px;
+  font-weight: 800;
+  place-content: center;
+
+  padding: 0.75rem 1rem;
+  font-size: 0.825rem;
+  line-height: 1rem;
+
+  background-color: rgba(0, 0, 0, 0.4);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.04),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+  color: #fff;
+}
+
+.btn-youtube:hover {
+  box-shadow:
+    0 4px 15px rgba(255, 0, 0, 0.3), /* Tạo hiệu ứng phát sáng đỏ đổ bóng nhẹ */
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 0 1px rgba(255, 0, 0, 0.2);
+  
+  color: #ffffff; /* Giữ chữ màu trắng */
+  transform: translate(0, -0.25rem); /* Nút nhích nhẹ lên trên giống bản gốc */
+  background-color: #ff0000; /* Đổi hẳn sang màu đỏ thương hiệu YouTube khi di chuột */
+}
+
+/* Đảm bảo icon SVG co giãn chuẩn theo font chữ */
+.btn-youtube svg {
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+/* Hiệu ứng phụ: Khi hover vào thì icon xoay nhẹ hoặc nhúc nhích nếu muốn */
+.btn-youtube:hover svg {
+  transform: scale(1.1);
+}
+
     /* --- HIỆU ỨNG MỞ ĐẦU PRELOADER LENIS --- */
 #lenis-preloader {
   position: fixed;
@@ -1574,6 +1621,21 @@ body.light-theme .lenis-object svg {
 
       <div class="panel reveal delay-1">
         <h2>Vì sao nên tham gia?</h2>
+        <!-- Tìm đến khu vực ô "Vì sao nên tham gia" trong code của bạn -->
+<div class="reason-section"> 
+  
+  <!-- CÁC THÀNH PHẦN CỦA Ô NỘI DUNG NẰM Ở ĐÂY -->
+
+  <hr style="border: 0; margin-bottom: 20px;"> <!-- Dòng kẻ mờ để giãn cách nếu cần -->
+
+  <!-- DÁN ĐOẠN HTML NÀY NGAY DƯỚI Ô ĐÓ -->
+  <a class="btn-youtube" href="https://www.youtube.com/@hao22830" target="_blank" rel="noopener noreferrer">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+      <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.01 2.01 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.01 2.01 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31 31 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.01 2.01 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A100 100 0 0 1 7.858 2zM6.4 5.209v4.818l4.157-2.408z"/>
+    </svg>
+    <span>Ghé thăm YouTube</span>
+  </a>
+</div>
         <p>
           Chúng tôi xây dựng một không gian thân thiện, dễ kết nối và luôn chào đón những người mới. Bạn có thể trò chuyện, tham gia sự kiện, nhận hỗ trợ và tận hưởng những khoảnh khắc đáng nhớ cùng nhau.
         </p>
