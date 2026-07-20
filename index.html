@@ -13,15 +13,111 @@ const lenis = new Lenis({
   infinite: false
 });
 
+
 function raf(time) {
   lenis.raf(time);
   requestAnimationFrame(raf);
 }
 
 requestAnimationFrame(raf);
+
+(function() {
+  const orb1 = document.getElementById('orb1');
+  const orb2 = document.getElementById('orb2');
+  const scrollProgress = document.getElementById('scrollProgress');
+
+  // Kiểm tra chắc chắn thư viện lenis tồn tại và hoạt động ổn định
+  if (typeof lenis !== 'undefined') {
+   if (typeof lenis !== 'undefined') {
+    lenis.on('scroll', (e) => {
+
+
+
+      const movingObject = document.getElementById('movingObject');
+
+lenis.on('scroll', (e) => {
+  const scrollTop = e.scroll || window.scrollY;
+  const speed = e.velocity || 0; // Lấy tốc độ cuộn chuột
+
+if (movingObject) {
+    // Xoay quanh trục dựa theo khoảng cách cuộn, lật góc nhẹ (RotateX/Y) khi cuộn nhanh
+    const rotateDegree = scrollTop * 0.15; 
+    const tiltX = Math.min(25, Math.max(-25, speed * 1.5)); 
+    const scale = 1 + Math.min(0.15, Math.abs(speed * 0.015));
+
+    movingObject.style.transform = `rotate3d(0.5, 1, 0.2, ${rotateDegree}deg) rotateX(${tiltX}deg) scale(${scale})`;
+  }
+});
+
+      const scrollTop = e.scroll || window.scrollY;
+      
+      // 1. Thanh tiến trình (giữ nguyên)
+      if (scrollProgress) {
+        const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+        scrollProgress.style.width = `${progress}%`;
+      }
+
+      // 2. Lấy tốc độ cuộn (giữ nguyên)
+      const speed = Math.min(12, Math.abs(e.velocity || 0)); 
+      document.documentElement.style.setProperty('--scroll-speed', speed);
+
+      // 3. Hiệu ứng nền (giữ nguyên)
+      if (orb1) orb1.style.transform = `translate3d(0, ${scrollTop * 0.3}px, 0) scale(${1 + (speed * 0.01)})`;
+      if (orb2) orb2.style.transform = `translate3d(0, ${-scrollTop * 0.2}px, 0) rotate(${scrollTop * 0.02}deg)`;
+
+      // ==========================================
+      // ĐOẠN MỚI THÊM: TỰ ĐỘNG BẬT HIỆU ỨNG HÌNH ẢNH / CARD KHI LƯỚT TỚI
+      // ==========================================
+      const revealElements = document.querySelectorAll('.reveal');
+      revealElements.forEach((el) => {
+        const rect = el.getBoundingClientRect();
+        // Nếu phần tử xuất hiện trong khung nhìn của trình duyệt
+        if (rect.top < window.innerHeight - 50) {
+          el.classList.add('active');
+        }
+      });
+    });
+  }
+}
+
+  // Trả lưới nền về trạng thái ô chuẩn mượt mà khi dừng cuộn
+  setInterval(() => {
+    const currentSpeed = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--scroll-speed')) || 0;
+    if (currentSpeed > 0) {
+      document.documentElement.style.setProperty('--scroll-speed', currentSpeed * 0.85);
+    }
+  }, 60);
+})();
+
 </script>
 
 <body>
+
+  <!-- Màn hình mở đầu phong cách Lenis.dev -->
+<div id="lenis-preloader">
+  <div class="preloader-wrap">
+    <div class="preloader-counter">00</div>
+    <div class="preloader-bar"></div>
+  </div>
+</div>
+
+ <!-- Khối vật thể Discord chìm dưới nền -->
+<div class="lenis-object-wrapper">
+  <div class="lenis-object" id="movingObject">
+    <!-- Icon Discord SVG xịn sò -->
+    <svg viewBox="0 0 127.14 96.36" xmlns="http://www.w3.org/2000/svg">
+      <path d="M107.7,8.07A105.15,105.15,0,0,0,77.26,0a77.19,77.19,0,0,0-3.3,6.83A96.67,96.67,0,0,0,53.22,6.83,77.19,77.19,0,0,0,49.88,0,105.15,105.15,0,0,0,19.44,8.07C3.66,31.58-1.95,54.65,1,77.53a105.79,105.79,0,0,0,32,16.29,77.7,77.7,0,0,0,6.83-11.12A68.8,68.8,0,0,1,29.3,77.47c1.72-1.26,3.47-2.58,5.16-4a75.6,75.6,0,0,0,65.23,0c1.69,1.39,3.44,2.71,5.16,4a68.8,68.8,0,0,1-10.54,5.22,77.7,77.7,0,0,0,6.83,11.12,105.79,105.79,0,0,0,32-16.29C129.66,47.78,123.39,24.89,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53S36.18,40.36,42.45,40.36,53.83,46,53.83,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.24,60,73.24,53S78.41,40.36,84.69,40.36,96.07,46,96.07,53,91,65.69,84.69,65.69Z"/>
+    </svg>
+  </div>
+</div>
+
+  <!-- Chèn dòng này ngay dưới thẻ body -->
+<div class="bg-grid-mesh" id="bgMesh" aria-hidden="true"></div>
+<div class="bg-glow-orbs" aria-hidden="true">
+  <div class="orb orb-1" id="orb1"></div>
+  <div class="orb orb-2" id="orb2"></div>
+</div>
 
   <!-- MÀN HÌNH LOADER PHỦ TOÀN MÀN HÌNH (Mặc định ẩn) -->
 <div id="loadingOverlay" class="loading-overlay">
@@ -53,7 +149,118 @@ requestAnimationFrame(raf);
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Discord Server Landing Page</title>
+
+
+  
   <style>
+
+    /* --- HIỆU ỨNG MỞ ĐẦU PRELOADER LENIS --- */
+#lenis-preloader {
+  position: fixed;
+  inset: 0;
+  background-color: #07111f; /* Màu tối trùng với nền web của bạn */
+  z-index: 999999; /* Đảm bảo nằm trên cùng tuyệt đối khi mở đầu */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 1.25s cubic-bezier(0.85, 0, 0.15, 1);
+  will-change: transform;
+}
+
+/* Khi hoàn thành đếm số, hiệu ứng này sẽ đẩy cả màn hình đen trượt lên trên */
+#lenis-preloader.loaded {
+  transform: translateY(-100%);
+}
+
+.preloader-wrap {
+  text-align: center;
+  width: 200px;
+}
+
+.preloader-counter {
+  font-size: 5rem;
+  font-weight: 800;
+  color: #5865f2; /* Màu xanh Discord làm điểm nhấn */
+  font-family: monospace;
+  letter-spacing: -2px;
+  line-height: 1;
+  margin-bottom: 15px;
+}
+
+.preloader-bar {
+  width: 0%;
+  height: 2px;
+  background: linear-gradient(90deg, #5865f2, #ff4d8d);
+  transition: width 0.05s linear;
+  box-shadow: 0 0 10px rgba(88, 101, 242, 0.5);
+}
+
+/* Khóa cuộn trang tạm thời khi đang tải */
+body.preloading {
+  overflow: hidden !important;
+}
+
+    .lenis-object-wrapper {
+  position: fixed;
+  top: 50%;
+  right: 10%; /* Nằm bên phải màn hình giống như bàn tay bên Lenis */
+  transform: translateY(-50%);
+  z-index: 10;
+  pointer-events: none;
+  perspective: 1000px; /* Tạo không gian 3D cho vật thể lật */
+}
+
+.lenis-object {
+  width: 150px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #5865f2, #ff4d8d);
+  border-radius: 30px;
+  box-shadow: 0 20px 50px rgba(88, 101, 242, 0.4);
+  will-change: transform;
+  transition: transform 0.1s ease-out;
+}
+
+.object-inner {
+  font-size: 5rem;
+}
+
+    /* Hiệu ứng Parallax nhẹ cho các thẻ Card/Hình ảnh khi lướt */
+.card, .panel, img {
+  will-change: transform;
+  /* Dùng hiệu ứng chuyển đổi 3D để tận dụng card đồ họa, giúp cuộn mượt hơn */
+  transform: translate3d(0, calc(var(--scroll-speed) * -0.8px), 0);
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Hiệu ứng xuất hiện từ dưới lên và rõ dần cực đẹp khi cuộn tới */
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 40px, 0);
+  transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+    .bg-grid-mesh {
+  position: fixed;
+  inset: 0;
+  z-index: -999; /* Đảm bảo âm thật sâu để nằm dưới cùng */
+  pointer-events: none; /* Không cản trở việc click chuột vào nút bấm */
+  /* các thuộc tính khác giữ nguyên... */
+}
+
+.bg-glow-orbs {
+  position: fixed;
+  inset: 0;
+  z-index: -1000; /* Nằm dưới cả lưới mesh */
+  pointer-events: none;
+}
 
   /* Màn hình phủ đen mờ toàn trang khi load */
 .loading-overlay {
@@ -1228,6 +1435,105 @@ body.light-theme .username-box.active input {
         grid-template-columns: 1fr;
       }
     }
+
+/* Chèn vào cuối thẻ style */
+:root {
+  --scroll-speed: 0;
+  --accent: #5865f2; 
+  --accent-2: #ff4d8d;
+}
+
+.bg-grid-mesh {
+  position: fixed;
+  inset: 0;
+  background-image: 
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), 
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: calc(42px + var(--scroll-speed) * 2) calc(42px + var(--scroll-speed) * 2); 
+  mask-image: radial-gradient(circle at 50% 50%, black 40%, transparent 90%);
+  opacity: 0.25;
+  z-index: -1;
+  pointer-events: none;
+  transition: background-size 0.2s ease-out;
+}
+
+body.light-theme .bg-grid-mesh {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+}
+
+.bg-glow-orbs {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.3;
+  transition: transform 0.3s ease-out, background 0.5s ease;
+}
+
+.orb-1 {
+  top: 10%;
+  left: -10%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, var(--accent) 0%, transparent 80%);
+}
+
+.orb-2 {
+  bottom: 10%;
+  right: -10%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, var(--accent-2) 0%, transparent 80%);
+}
+
+.hero {
+  position: relative;
+  z-index: 1;
+  will-change: transform;
+}
+
+.lenis-object-wrapper {
+  position: fixed;
+  top: 55%;
+  left: 55%; /* Nằm hơi lệch về phía bên phải để làm nền cho chữ */
+  transform: translate(-50%, -50%);
+  z-index: -1; /* ĐƯA XUỐNG DƯỚI NỀN AN TOÀN */
+  pointer-events: none; /* Chuột lướt qua bình thường không bị cản */
+  perspective: 1000px;
+}
+
+.lenis-object {
+  width: 320px; /* Tăng kích thước lên làm hình nền */
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  will-change: transform;
+  transition: transform 0.15s cubic-bezier(0.25, 1, 0.5, 1);
+  opacity: 0.12; /* Làm mờ đi giống hình chìm nghệ thuật trong lenis.dev */
+}
+
+.lenis-object svg {
+  width: 100%;
+  height: 100%;
+  fill: #5865f2; /* Màu xanh thương hiệu Discord */
+  /* Tạo hiệu ứng đổ bóng phát sáng Neon */
+  filter: drop-shadow(0 0 20px rgba(88, 101, 242, 0.6)); 
+}
+
+/* Nếu bạn chuyển sang chế độ Light-theme (nếu có) */
+body.light-theme .lenis-object svg {
+  fill: #3b82f6;
+  opacity: 0.08;
+}
+
   </style>
 </head>
 <body>
@@ -1340,6 +1646,47 @@ body.light-theme .username-box.active input {
   </div>
 
   <script>
+
+    // --- XỬ LÝ CHẠY HIỆU ỨNG MỞ ĐẦU ---
+(function() {
+  // Khóa cuộn chuột tạm thời
+  document.body.classList.add('preloading');
+  if (typeof lenis !== 'undefined') lenis.stop(); // Tạm dừng mượt cuộn chuột
+
+  const counterEl = document.querySelector('.preloader-counter');
+  const barEl = document.querySelector('.preloader-bar');
+  const preloaderEl = document.getElementById('lenis-preloader');
+  
+  let currentPercent = 0;
+
+  // Hàm chạy bộ đếm số tăng dần
+  const countInterval = setInterval(() => {
+    // Tăng ngẫu nhiên để tạo cảm giác hệ thống đang load dữ liệu thật
+    currentPercent += Math.floor(Math.random() * 4) + 2; 
+    
+    if (currentPercent >= 100) {
+      currentPercent = 100;
+      clearInterval(countInterval);
+      
+      // Định dạng hiển thị đủ 3 chữ số khi đạt 100
+      counterEl.textContent = "100";
+      barEl.style.width = "100%";
+      
+      // Đếm xong -> Kích hoạt hiệu ứng trượt màn hình đen lên trên
+      setTimeout(() => {
+        if (preloaderEl) preloaderEl.classList.add('loaded');
+        document.body.classList.remove('preloading');
+        
+        // Mở lại tính năng Smooth Scroll hoạt động bình thường
+        if (typeof lenis !== 'undefined') lenis.start(); 
+      }, 400); // Chờ 0.4 giây sau khi đạt 100% rồi mới trượt lên
+    } else {
+      // Định dạng chữ số luôn có 2 chữ số (ví dụ: 05, 09, 45)
+      counterEl.textContent = currentPercent < 10 ? "0" + currentPercent : currentPercent;
+      barEl.style.width = currentPercent + "%";
+    }
+  }, 35); // Tốc độ chạy chữ (số càng nhỏ chạy càng nhanh)
+})();
   
     // --- ĐIỀU KHIỂN NÚT CHUYỂN ĐỔI THEME GIAO DIỆN ---
     const themeToggleInput = document.getElementById('themeToggle');
