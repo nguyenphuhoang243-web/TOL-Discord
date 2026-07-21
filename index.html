@@ -2207,16 +2207,10 @@
             submitBtn.style.pointerEvents = 'none';
 
             try {
-                // Send to Google Form - each field maps to an entry ID
-                // BẠN CẦN THAY entry IDs BÊN DƯỚI BẰNG ID THẬT CỦA GOOGLE FORM CỦA BẠN
+                // Gộp tất cả fields vào 1 chuỗi gửi về entry.1432806072 (đang hoạt động)
+                const combinedData = `[TUYỂN DỤNG TOL] Discord: ${discordName} | IGN: ${ign} | Thế mạnh: ${strength} | Online: ${onlineTime} | Kinh nghiệm: ${experience}`;
                 const fd = new FormData();
-                // Mặc định gửi tất cả vào 1 ô để dễ test, bạn có thể tách riêng từng entry khi có ID thật
-                fd.append('entry.1750906352', discordName);
-                fd.append('entry.1858630500', ign);
-                fd.append('entry.401349432', strength);
-                fd.append('entry.1242609380', onlineTime);
-                fd.append('entry.1924226733', experience);
-
+                fd.append('entry.1432806072', combinedData);
 
                 await fetch('https://docs.google.com/forms/d/e/1FAIpQLSfG7iWgzj-vkOufppbVaXIyWv6227w7ZDpeArwfEhl02hp--Q/formResponse', {
                     method: 'POST',
