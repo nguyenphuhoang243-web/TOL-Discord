@@ -1,2083 +1,1686 @@
-  <!DOCTYPE html>
-  <html lang="vi">
-  <head>
-      <meta charset="UTF-8" />
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Discord Server Landing Page</title>
 
+    <!-- Google Fonts - Inter for Spline-like typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Three.js for 3D -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <!-- Lenis smooth scroll -->
     <script src="https://unpkg.com/lenis@1.3.11/dist/lenis.min.js"></script>
-    
 
-  <script>
-  const lenis = new Lenis({
-    duration: 1.2,
-    smoothWheel: true,
-    wheelMultiplier: 1,
-    touchMultiplier: 2,
-    infinite: false
-  });
-
-
-  function raf(time) {
-    lenis.raf(time);
-    requestAnimationFrame(raf);
-  }
-
-  requestAnimationFrame(raf);
-
-  (function() {
-    const orb1 = document.getElementById('orb1');
-    const orb2 = document.getElementById('orb2');
-    const scrollProgress = document.getElementById('scrollProgress');
-
-    // Kiểm tra chắc chắn thư viện lenis tồn tại và hoạt động ổn định
-    if (typeof lenis !== 'undefined') {
-    if (typeof lenis !== 'undefined') {
-      lenis.on('scroll', (e) => {
-
-
-
-        const movingObject = document.getElementById('movingObject');
-
-  lenis.on('scroll', (e) => {
-    const scrollTop = e.scroll || window.scrollY;
-    const speed = e.velocity || 0; // Lấy tốc độ cuộn chuột
-
-  if (movingObject) {
-      // Xoay quanh trục dựa theo khoảng cách cuộn, lật góc nhẹ (RotateX/Y) khi cuộn nhanh
-      const rotateDegree = scrollTop * 0.15; 
-      const tiltX = Math.min(25, Math.max(-25, speed * 1.5)); 
-      const scale = 1 + Math.min(0.15, Math.abs(speed * 0.015));
-
-      movingObject.style.transform = `rotate3d(0.5, 1, 0.2, ${rotateDegree}deg) rotateX(${tiltX}deg) scale(${scale})`;
-    }
-  });
-
-        const scrollTop = e.scroll || window.scrollY;
-        
-        // 1. Thanh tiến trình (giữ nguyên)
-        if (scrollProgress) {
-          const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-          const progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
-          scrollProgress.style.width = `${progress}%`;
-        }
-
-        // 2. Lấy tốc độ cuộn (giữ nguyên)
-        const speed = Math.min(12, Math.abs(e.velocity || 0)); 
-        document.documentElement.style.setProperty('--scroll-speed', speed);
-
-        // 3. Hiệu ứng nền (giữ nguyên)
-        if (orb1) orb1.style.transform = `translate3d(0, ${scrollTop * 0.3}px, 0) scale(${1 + (speed * 0.01)})`;
-        if (orb2) orb2.style.transform = `translate3d(0, ${-scrollTop * 0.2}px, 0) rotate(${scrollTop * 0.02}deg)`;
-
-        // ==========================================
-        // ĐOẠN MỚI THÊM: TỰ ĐỘNG BẬT HIỆU ỨNG HÌNH ẢNH / CARD KHI LƯỚT TỚI
-        // ==========================================
-        const revealElements = document.querySelectorAll('.reveal');
-        revealElements.forEach((el) => {
-          const rect = el.getBoundingClientRect();
-          // Nếu phần tử xuất hiện trong khung nhìn của trình duyệt
-          if (rect.top < window.innerHeight - 50) {
-            el.classList.add('active');
-          }
-        });
-      });
-    }
-  }
-
-    // Trả lưới nền về trạng thái ô chuẩn mượt mà khi dừng cuộn
-    setInterval(() => {
-      const currentSpeed = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--scroll-speed')) || 0;
-      if (currentSpeed > 0) {
-        document.documentElement.style.setProperty('--scroll-speed', currentSpeed * 0.85);
-      }
-    }, 60);
-  })();
-
-  </script>
-
-  <body>
-
-    <!-- Màn hình mở đầu phong cách Lenis.dev -->
-  <div id="lenis-preloader">
-    <div class="preloader-wrap">
-      <div class="preloader-counter">00</div>
-      <div class="preloader-bar"></div>
-    </div>
-  </div>
-
-  <!-- Khối vật thể Discord chìm dưới nền -->
-  <div class="lenis-object-wrapper">
-    <div class="lenis-object" id="movingObject">
-      <!-- Icon Discord SVG xịn sò -->
-      <svg viewBox="0 0 127.14 96.36" xmlns="http://www.w3.org/2000/svg">
-        <path d="M107.7,8.07A105.15,105.15,0,0,0,77.26,0a77.19,77.19,0,0,0-3.3,6.83A96.67,96.67,0,0,0,53.22,6.83,77.19,77.19,0,0,0,49.88,0,105.15,105.15,0,0,0,19.44,8.07C3.66,31.58-1.95,54.65,1,77.53a105.79,105.79,0,0,0,32,16.29,77.7,77.7,0,0,0,6.83-11.12A68.8,68.8,0,0,1,29.3,77.47c1.72-1.26,3.47-2.58,5.16-4a75.6,75.6,0,0,0,65.23,0c1.69,1.39,3.44,2.71,5.16,4a68.8,68.8,0,0,1-10.54,5.22,77.7,77.7,0,0,0,6.83,11.12,105.79,105.79,0,0,0,32-16.29C129.66,47.78,123.39,24.89,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53S36.18,40.36,42.45,40.36,53.83,46,53.83,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.24,60,73.24,53S78.41,40.36,84.69,40.36,96.07,46,96.07,53,91,65.69,84.69,65.69Z"/>
-      </svg>
-    </div>
-  </div>
-
-    <!-- Chèn dòng này ngay dưới thẻ body -->
-  <div class="bg-grid-mesh" id="bgMesh" aria-hidden="true"></div>
-  <div class="bg-glow-orbs" aria-hidden="true">
-    <div class="orb orb-1" id="orb1"></div>
-    <div class="orb orb-2" id="orb2"></div>
-  </div>
-
-    <!-- MÀN HÌNH LOADER PHỦ TOÀN MÀN HÌNH (Mặc định ẩn) -->
-  <div id="loadingOverlay" class="loading-overlay">
-    <div class="custom-loader"></div>
-  </div>
-
-  <!-- NÚT ĐỔI THEME GIỮ NGUYÊN HIỆU ỨNG HẠT LẤP LÁNH -->
-  <div class="toggle-cont position-theme-toggle" id="themeContainer">
-    <input type="checkbox" id="themeToggle" class="toggle-input">
-    <label for="themeToggle" class="toggle-label">
-      <div class="cont-icon">
-        <!-- Các hạt lấp lánh hoạt ảnh (sparkles) -->
-        <span class="sparkle" style="--deg: 0; --duration: 1;"></span>
-        <span class="sparkle" style="--deg: 45; --duration: 1.5;"></span>
-        <span class="sparkle" style="--deg: 90; --duration: 1.2;"></span>
-        <span class="sparkle" style="--deg: 135; --duration: 1.8;"></span>
-        <span class="sparkle" style="--deg: 180; --duration: 1.1;"></span>
-        <span class="sparkle" style="--deg: 225; --duration: 1.4;"></span>
-        <span class="sparkle" style="--deg: 270; --duration: 1.6;"></span>
-        <span class="sparkle" style="--deg: 315; --duration: 1.3;"></span>
-        
-        <!-- Icon Mặt trăng và Mặt trời -->
-        <svg class="icon svg-moon" viewBox="0 0 24 24" style="position: absolute; width: 1.1rem; fill: #d9d9d9; transition: opacity 0.3s;"><path d="M12 3c.132 0 .263 0 .393.007a7.5 7.5 0 0 0 7.92 12.446A9 9 0 1 1 12 3z"/></svg>
-        <svg class="icon svg-sun" viewBox="0 0 24 24" style="position: absolute; width: 1.1rem; fill: #dfe6ff; opacity: 0; transition: opacity 0.3s;"><path d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zM2 13h2v-2H2v2zm18 0h2v-2h-2v2zM11 2v2h2V2h-2zm0 18v2h2v-2h-2zM5.99 4.58 4.58 5.99l1.41 1.41 1.41-1.41-1.41-1.41zm12.02 12.02-1.41 1.41 1.41 1.41 1.41-1.41-1.41-1.41zM7.41 16.59 5.99 18.01l1.41 1.41 1.41-1.41-1.41-1.41zM18.01 5.99l1.41-1.41-1.41-1.41-1.41 1.41 1.41 1.41z"/></svg>
-      </div>
-    </label>
-  </div>
-    
     <style>
-
-      #music-player {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    background: rgba(0, 0, 0, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    padding: 10px 16px;
-    border-radius: 12px;
-    width: fit-content;
-    max-width: 300px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    margin: 20px auto; /* Căn giữa, bạn có thể chỉnh lại tùy vị trí */
-    transition: all 0.3s ease;
-  }
-
-  /* Icon nốt nhạc quay nhẹ khi đang phát */
-  .player-icon {
-    font-size: 20px;
-    animation: pulse 1.5s infinite alternate;
-  }
-
-  .player-info {
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* Chữ trạng thái nhỏ ở trên */
-  .player-status {
-    font-size: 0.65rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #888;
-  }
-
-  /* Chữ trạng thái khi nhạc đang phát */
-  .player-status.playing {
-    color: #22ff22; /* Màu xanh lá cây phát sáng */
-    text-shadow: 0 0 5px rgba(34, 255, 34, 0.5);
-  }
-
-  /* Tên bài hát hiển thị đậm */
-  .track-name {
-    font-size: 0.85rem;
-    font-weight: bold;
-    color: #fff;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  /* Hiệu ứng nhấp nháy cho icon */
-  @keyframes pulse {
-    0% { transform: scale(1); }
-    100% { transform: scale(1.1); }
-  }
-
-      /* From Uiverse.io by Creatlydev - Customized for YouTube */ 
-  .btn-youtube {
-    cursor: pointer;
-    display: inline-flex; /* Giúp nút không bị dài hết màn hình khi dùng thẻ <a> */
-    align-items: center;  /* Căn giữa icon và chữ theo chiều dọc */
-    gap: 0.5rem;
-    border: none;
-    text-decoration: none; /* Xóa dấu gạch chân mặc định của thẻ link */
-
-    transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
-    border-radius: 100px;
-    font-weight: 800;
-    place-content: center;
-
-    padding: 0.75rem 1rem;
-    font-size: 0.825rem;
-    line-height: 1rem;
-
-    background-color: rgba(0, 0, 0, 0.4);
-    box-shadow:
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.04),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.04);
-    color: #fff;
-  }
-
-  .btn-youtube:hover {
-    box-shadow:
-      0 4px 15px rgba(255, 0, 0, 0.3), /* Tạo hiệu ứng phát sáng đỏ đổ bóng nhẹ */
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.1),
-      inset 0 0 0 1px rgba(255, 0, 0, 0.2);
-    
-    color: #ffffff; /* Giữ chữ màu trắng */
-    transform: translate(0, -0.25rem); /* Nút nhích nhẹ lên trên giống bản gốc */
-    background-color: #ff0000; /* Đổi hẳn sang màu đỏ thương hiệu YouTube khi di chuột */
-  }
-
-  /* Đảm bảo icon SVG co giãn chuẩn theo font chữ */
-  .btn-youtube svg {
-    flex-shrink: 0;
-    transition: transform 0.3s ease;
-  }
-
-  /* Hiệu ứng phụ: Khi hover vào thì icon xoay nhẹ hoặc nhúc nhích nếu muốn */
-  .btn-youtube:hover svg {
-    transform: scale(1.1);
-  }
-
-      /* --- HIỆU ỨNG MỞ ĐẦU PRELOADER LENIS --- */
-  #lenis-preloader {
-    position: fixed;
-    inset: 0;
-    background-color: #07111f; /* Màu tối trùng với nền web của bạn */
-    z-index: 999999; /* Đảm bảo nằm trên cùng tuyệt đối khi mở đầu */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 1.25s cubic-bezier(0.85, 0, 0.15, 1);
-    will-change: transform;
-  }
-
-  /* Khi hoàn thành đếm số, hiệu ứng này sẽ đẩy cả màn hình đen trượt lên trên */
-  #lenis-preloader.loaded {
-    transform: translateY(-100%);
-  }
-
-  .preloader-wrap {
-    text-align: center;
-    width: 200px;
-  }
-
-  .preloader-counter {
-    font-size: 5rem;
-    font-weight: 800;
-    color: #5865f2; /* Màu xanh Discord làm điểm nhấn */
-    font-family: monospace;
-    letter-spacing: -2px;
-    line-height: 1;
-    margin-bottom: 15px;
-  }
-
-  .preloader-bar {
-    width: 0%;
-    height: 2px;
-    background: linear-gradient(90deg, #5865f2, #ff4d8d);
-    transition: width 0.05s linear;
-    box-shadow: 0 0 10px rgba(88, 101, 242, 0.5);
-  }
-
-  /* Khóa cuộn trang tạm thời khi đang tải */
-  body.preloading {
-    overflow: hidden !important;
-  }
-
-      .lenis-object-wrapper {
-    position: fixed;
-    top: 50%;
-    right: 10%; /* Nằm bên phải màn hình giống như bàn tay bên Lenis */
-    transform: translateY(-50%);
-    z-index: 10;
-    pointer-events: none;
-    perspective: 1000px; /* Tạo không gian 3D cho vật thể lật */
-  }
-
-  .lenis-object {
-    width: 150px;
-    height: 150px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, #5865f2, #ff4d8d);
-    border-radius: 30px;
-    box-shadow: 0 20px 50px rgba(88, 101, 242, 0.4);
-    will-change: transform;
-    transition: transform 0.1s ease-out;
-  }
-
-  .object-inner {
-    font-size: 5rem;
-  }
-
-      /* Hiệu ứng Parallax nhẹ cho các thẻ Card/Hình ảnh khi lướt */
-  .card, .panel, img {
-    will-change: transform;
-    /* Dùng hiệu ứng chuyển đổi 3D để tận dụng card đồ họa, giúp cuộn mượt hơn */
-    transform: translate3d(0, calc(var(--scroll-speed) * -0.8px), 0);
-    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-  }
-
-  /* Hiệu ứng xuất hiện từ dưới lên và rõ dần cực đẹp khi cuộn tới */
-  .reveal {
-    opacity: 0;
-    transform: translate3d(0, 40px, 0);
-    transition: opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-  }
-
-  .reveal.active {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-
-      .bg-grid-mesh {
-    position: fixed;
-    inset: 0;
-    z-index: -999; /* Đảm bảo âm thật sâu để nằm dưới cùng */
-    pointer-events: none; /* Không cản trở việc click chuột vào nút bấm */
-    /* các thuộc tính khác giữ nguyên... */
-  }
-
-  .bg-glow-orbs {
-    position: fixed;
-    inset: 0;
-    z-index: -1000; /* Nằm dưới cả lưới mesh */
-    pointer-events: none;
-  }
-
-    /* Màn hình phủ đen mờ toàn trang khi load */
-  .loading-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(12, 12, 12, 0.85); /* Nền tối mờ che giao diện cũ */
-    backdrop-filter: blur(5px);
-    z-index: 99999; /* Đảm bảo đè lên trên tất cả mọi thứ kể cả nút theme */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    
-    /* Hiệu ứng ẩn hiện mượt mà */
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-  }
-
-  /* Class kích hoạt khi bấm nút */
-  .loading-overlay.active {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  /* Đồng bộ màu loader với chế độ sáng nếu muốn (tùy chọn) */
-  body.light-theme .loading-overlay {
-    background-color: rgba(240, 244, 249, 0.85); /* Nền sáng mờ khi ở light mode */
-  }
-
-  /* --- CODE CSS CUSTOM LOADER CỦA BẠN --- */
-  .custom-loader {
-    width: 70px;
-    height: 70px;
-    background: #ffa600;
-    border-radius: 50px;
-    -webkit-mask: radial-gradient(circle 31px at 50% calc(100% + 13px),#000 95%,#0000) top 4px left 50%,
-      radial-gradient(circle 31px,#000 95%,#0000) center,
-      radial-gradient(circle 31px at 50% -13px,#000 95%,#0000) bottom 4px left 50%,
-      linear-gradient(#000 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    -webkit-mask-repeat: no-repeat;
-    animation: cu10 1.5s infinite;
-  }
-
-  @keyframes cu10 {
-    0% { -webkit-mask-size: 0 18px, 0 18px, 0 18px, auto }
-    16.67% { -webkit-mask-size: 100% 18px, 0 18px, 0 18px, auto }
-    33.33% { -webkit-mask-size: 100% 18px, 100% 18px, 0 18px, auto }
-    50% { -webkit-mask-size: 100% 18px, 100% 18px, 100% 18px, auto }
-    66.67% { -webkit-mask-size: 0 18px, 100% 18px, 100% 18px, auto }
-    83.33% { -webkit-mask-size: 0 18px, 0 18px, 100% 18px, auto }
-    100% { -webkit-mask-size: 0 18px, 0 18px, 0 18px, auto }
-  }
-
-      html,
-  body {
-    scroll-behavior: auto !important;
-  }
-
-  html.lenis,
-  html.lenis body {
-    height: auto;
-  }
-
-  .lenis.lenis-smooth {
-    scroll-behavior: auto !important;
-  }
-
-  .lenis.lenis-stopped {
-    overflow: hidden;
-  }
-
-      /* --- VỊ TRÍ NÚT TRÊN ĐẦU BÊN PHẢI --- */
-  .position-theme-toggle {
-    position: absolute !important; /* Đổi từ fixed sang absolute để nút đứng yên tại chỗ */
-    top: 25px !important;
-    right: 25px !important;
-    left: auto !important;
-    z-index: 10000 !important;
-    transform: scale(0.85);
-  }
-
-  /* --- ĐOẠN CSS GỐC CỦA BẠN (ĐÃ GIỮ NGUYÊN HIỆU ỨNG SPARKLE) --- */
-  .toggle-cont {
-    --primary: #54a8fc;
-    --light: #d9d9d9;
-    --dark: #121212;
-    --gray: #414344;
-    position: relative;
-    z-index: 10;
-    width: fit-content;
-    height: 50px;
-    border-radius: 9999px;
-  }
-  .toggle-cont .toggle-input { display: none; }
-  .toggle-cont .toggle-label {
-    --gap: 5px;
-    --width: 50px;
-    cursor: pointer;
-    position: relative;
-    display: inline-block;
-    padding: 0.5rem;
-    width: calc((var(--width) + var(--gap)) * 2);
-    height: 100%;
-    background-color: var(--dark);
-    border: 1px solid #777777;
-    border-bottom: 0;
-    border-radius: 9999px;
-    box-sizing: content-box;
-    transition: all 0.3s ease-in-out;
-  }
-  .toggle-label::before {
-    content: "";
-    position: absolute;
-    z-index: -10;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: calc(100% + 1.5rem);
-    height: calc(100% + 1.5rem);
-    background-color: var(--gray);
-    border: 1px solid #777777;
-    border-bottom: 0;
-    border-radius: 9999px;
-    transition: all 0.3s ease-in-out;
-  }
-  .toggle-label::after {
-    content: "";
-    position: absolute;
-    z-index: -10;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    height: 100%;
-    background-image: radial-gradient(circle at 50% -100%, rgb(58, 155, 252) 0%, rgba(12, 12, 12, 1) 80%);
-    border-radius: 9999px;
-  }
-  .toggle-cont .toggle-label .cont-icon {
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: var(--width);
-    height: 50px;
-    background-image: radial-gradient(circle at 50% 0%, #666666 0%, var(--gray) 100%);
-    border: 1px solid #aaaaaa;
-    border-bottom: 0;
-    border-radius: 9999px;
-    box-shadow: inset 0 -0.15rem 0.15rem var(--primary);
-    transition: transform 0.3s ease-in-out;
-  }
-  .cont-icon { overflow: clip; position: relative; }
-
-  /* HOẠT ẢNH HẠT LẤP LÁNH (SPARKLE) */
-  .cont-icon .sparkle {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    display: block;
-    width: calc(var(--width) * 0.08);
-    aspect-ratio: 1;
-    background-color: var(--light);
-    border-radius: 50%;
-    transform-origin: 50% 50%;
-    transform: translate(-50%, -50%) rotate(calc(1deg * var(--deg))) translateX(15px);
-    opacity: 0.6;
-  }
-
-  /* KHI NÚT ĐƯỢC CHỌN (GIAO DIỆN SÁNG) */
-  .toggle-cont:has(.toggle-input:checked) .toggle-label {
-    background-color: #41434400;
-    border: 1px solid #3d6970;
-    border-bottom: 0;
-  }
-  .toggle-cont:has(.toggle-input:checked) .toggle-label::before {
-    box-shadow: 0 1rem 2.5rem -2rem #0080ff;
-  }
-  .toggle-cont:has(.toggle-input:checked) .toggle-label .cont-icon {
-    overflow: visible;
-    background-image: radial-gradient(circle at 50% 0%, #045ab1 0%, var(--primary) 100%);
-    border: 1px solid var(--primary);
-    border-bottom: 0;
-    transform: translateX(calc((var(--gap) * 2) + 100%)) rotate(-225deg);
-  }
-
-  /* Hiệu ứng hạt bắn bung ra ngoài khi bật chế độ sáng */
-  .toggle-cont:has(.toggle-input:checked) .cont-icon .sparkle {
-    z-index: -10;
-    width: calc(var(--width) * 0.12);
-    background-color: #acacac;
-    animation: sparkle-burst 0.6s ease-out forwards;
-  }
-
-  @keyframes sparkle-burst {
-    0% {
-      transform: translate(-50%, -50%) rotate(calc(1deg * var(--deg))) translateX(10px);
-      opacity: 1;
-    }
-    100% {
-      transform: translate(-50%, -50%) rotate(calc(1deg * var(--deg))) translateX(45px);
-      opacity: 0;
-    }
-  }
-
-  /* Ẩn hiện icon tương ứng */
-  .toggle-cont:has(.toggle-input:checked) .svg-moon { opacity: 0; }
-  .toggle-cont:has(.toggle-input:checked) .svg-sun { opacity: 1; transform: rotate(225deg); fill: #fff; }
-
-  /* --- CÁC THAY ĐỔI MÀU NỀN SÁNG CHO TOÀN BỘ WEB --- */
-  body.light-theme {
-    --bg: #f0f4f9;
-    --panel: rgba(0, 0, 0, 0.05);
-    --text: #1e293b;
-    --muted: #64748b;
-    background: 
-      radial-gradient(circle at top left, rgba(88, 101, 242, 0.15), transparent 30%),
-      linear-gradient(135deg, #e2e8f0 0%, #f1f5f9 50%, #ffffff 100%);
-    background-attachment: fixed;
-  }
-  body.light-theme h1 {
-    background: linear-gradient(90deg, #0f172a 0%, #1e293b 50%, #475569 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  body.light-theme .card,
-  body.light-theme .panel,
-  body.light-theme .loader-box {
-    background: rgba(255, 255, 255, 0.8);
-    border-color: rgba(0, 0, 0, 0.08);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
-    color: #1e293b;
-  }
-  body.light-theme .username-box input {
-    background: rgba(0, 0, 0, 0.05);
-    color: #1e293b;
-  }
-
-      /* --- ĐỊNH VỊ NÚT TOGGLE GÓC TRÊN BÊN PHẢI --- */
-  .position-theme-toggle {
-    position: fixed;
-    top: 25px;
-    right: 25px;
-    z-index: 10000;
-    transform: scale(0.85); /* Thu nhỏ xíu cho tinh tế vừa vặn */
-  }
-
-  /* --- DÁN ĐOẠN CSS CỦA BẠN VÀ CẤU HÌNH LIÊN KẾT THEME TẠI ĐÂY --- */
-  .toggle-cont {
-    --primary: #54a8fc;
-    --light: #d9d9d9;
-    --dark: #121212;
-    --gray: #414344;
-    position: relative;
-    z-index: 10;
-    width: fit-content;
-    height: 50px;
-    border-radius: 9999px;
-  }
-  .toggle-cont .toggle-input { display: none; }
-  .toggle-cont .toggle-label {
-    --gap: 5px;
-    --width: 50px;
-    cursor: pointer;
-    position: relative;
-    display: inline-block;
-    padding: 0.5rem;
-    width: calc((var(--width) + var(--gap)) * 2);
-    height: 100%;
-    background-color: var(--dark);
-    border: 1px solid #777777;
-    border-bottom: 0;
-    border-radius: 9999px;
-    box-sizing: content-box;
-    transition: all 0.3s ease-in-out;
-  }
-  .toggle-label::before {
-    content: "";
-    position: absolute;
-    z-index: -10;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: calc(100% + 1.5rem);
-    height: calc(100% + 1.5rem);
-    background-color: var(--gray);
-    border: 1px solid #777777;
-    border-bottom: 0;
-    border-radius: 9999px;
-    transition: all 0.3s ease-in-out;
-  }
-  .toggle-label::after {
-    content: "";
-    position: absolute;
-    z-index: -10;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 100%;
-    height: 100%;
-    background-image: radial-gradient(circle at 50% -100%, rgb(58, 155, 252) 0%, rgba(12, 12, 12, 1) 80%);
-    border-radius: 9999px;
-  }
-  .toggle-cont .toggle-label .cont-icon {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    width: var(--width);
-    height: 50px;
-    background-image: radial-gradient(circle at 50% 0%, #666666 0%, var(--gray) 100%);
-    border: 1px solid #aaaaaa;
-    border-bottom: 0;
-    border-radius: 9999px;
-    box-shadow: inset 0 -0.15rem 0.15rem var(--primary);
-    transition: transform 0.3s ease-in-out;
-  }
-  .cont-icon { overflow: clip; position: relative; }
-
-  /* Trạng thái KHI BẤM CHECKED (Đổi giao diện Sáng) */
-  .toggle-cont:has(.toggle-input:checked) .toggle-label {
-    background-color: #41434400;
-    border: 1px solid #3d6970;
-    border-bottom: 0;
-  }
-  .toggle-cont:has(.toggle-input:checked) .toggle-label::before {
-    box-shadow: 0 1rem 2.5rem -2rem #0080ff;
-  }
-  .toggle-cont:has(.toggle-input:checked) .toggle-label .cont-icon {
-    overflow: visible;
-    background-image: radial-gradient(circle at 50% 0%, #045ab1 0%, var(--primary) 100%);
-    border: 1px solid var(--primary);
-    border-bottom: 0;
-    transform: translateX(calc((var(--gap) * 2) + 100%)) rotate(-225deg);
-  }
-
-  /* Xử lý ẩn hiện Icon SVG tương ứng khi xoay nút */
-  .toggle-cont:has(.toggle-input:checked) .svg-moon { opacity: 0; }
-  .toggle-cont:has(.toggle-input:checked) .svg-sun { opacity: 1; transform: rotate(225deg); fill: #fff; }
-
-  /* --- ĐỔI TOÀN BỘ GIAO DIỆN WEB SANG LỚP MÀU SÁNG --- */
-  body.light-theme {
-    --bg: #f0f4f9;
-    --panel: rgba(0, 0, 0, 0.05);
-    --text: #1e293b;
-    --muted: #64748b;
-    background: 
-      radial-gradient(circle at top left, rgba(88, 101, 242, 0.15), transparent 30%),
-      linear-gradient(135deg, #e2e8f0 0%, #f1f5f9 50%, #ffffff 100%);
-    background-attachment: fixed;
-  }
-  body.light-theme h1 {
-    background: linear-gradient(90deg, #0f172a 0%, #1e293b 50%, #475569 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-  body.light-theme .card,
-  body.light-theme .panel,
-  body.light-theme .loader-box,
-  body.light-theme .stack-card {
-    background: rgba(255, 255, 255, 0.8);
-    border-color: rgba(0, 0, 0, 0.08);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
-    color: #1e293b;
-  }
-  body.light-theme .loader::after {
-    box-shadow: 0 5px 0 #1e293b, -35px 50px 0 #1e293b, -70px 95px 0 #1e293b;
-  }
-  body.light-theme .username-box input {
-    background: rgba(0, 0, 0, 0.05);
-    color: #1e293b;
-  }
-  body.light-theme .username-box.active input {
-    background: linear-gradient(#ffffff, #ffffff) padding-box, linear-gradient(135deg, #7b2ff7, #3b82f6) border-box;
-  }
-      
-  #success{
-      position:fixed;
-      top:30px;
-      right:-400px;
-
-      padding:15px 25px;
-
-      border-radius:14px;
-
-      color:white;
-      font-weight:bold;
-
-      background:linear-gradient(135deg,#19c37d,#22c55e);
-
-      box-shadow:0 0 25px rgba(34,197,94,.5);
-
-      transition:.45s;
-  }
-
-  #success.show{
-      right:30px;
-  }
-
-      .username-box{
-      width:340px;
-      margin:0 auto 50px;
-      position:relative;
-  }
-
-  .username-label{
-      width:100%;
-      padding:16px;
-      text-align:center;
-      color:white;
-      font-weight:bold;
-      border-radius:16px;
-      cursor:pointer;
-
-      background:linear-gradient(135deg,#7b2ff7,#3b82f6);
-
-      box-shadow:
-      0 0 20px rgba(123,47,247,.5),
-      0 0 35px rgba(59,130,246,.4);
-
-      transition:.35s;
-  }
-
-  .username-box input{
-      width:100%;
-      margin-top:10px;
-      height:0;
-      opacity:0;
-
-      border:none;
-      outline:none;
-
-      border-radius:14px;
-
-      background:rgba(255,255,255,.08);
-
-      color:white;
-
-      padding:0 18px;
-
-      transition:.35s;
-
-      backdrop-filter:blur(12px);
-  }
-
-  .username-box.active input{
-
-      height:54px;
-
-      opacity:1;
-
-      padding:0 18px;
-
-      border:2px solid transparent;
-
-      background:
-      linear-gradient(rgba(20,20,40,.9),rgba(20,20,40,.9)) padding-box,
-      linear-gradient(135deg,#7b2ff7,#3b82f6) border-box;
-
-      box-shadow:
-      0 0 15px #7b2ff7,
-      0 0 30px #3b82f6;
-  }
-
-  .username-box.active .username-label{
-
-      transform:
-      translateY(-10px)
-      scale(.92);
-
-      box-shadow:
-      0 0 25px #7b2ff7,
-      0 0 45px #3b82f6;
-  }
-
-      .send-btn{
-      width:340px;
-      margin:18px auto 0;
-
-      display:flex;
-      justify-content:center;
-      align-items:center;
-
-      padding:16px;
-
-      border-radius:16px;
-
-      cursor:pointer;
-
-      color:white;
-      font-size:17px;
-      font-weight:700;
-
-      user-select:none;
-
-      background:linear-gradient(135deg,#7b2ff7,#3b82f6);
-
-      box-shadow:
-      0 0 20px rgba(123,47,247,.45),
-      0 0 40px rgba(59,130,246,.35);
-
-      transition:.3s;
-  }
-
-  .send-btn:hover{
-
-      transform:
-      translateY(-3px)
-      scale(1.03);
-
-      box-shadow:
-      0 0 35px #7b2ff7,
-      0 0 55px #3b82f6;
-  }
-
-  .send-btn:active{
-
-      transform:
-      scale(.96);
-
-      transition:.1s;
-  }
-
-  .send-btn span{
-      pointer-events:none;
-  }
-
-      :root {
-        --bg: #07111f;
-        --panel: rgba(255, 255, 255, 0.08);
-        --text: #f5f7ff;
-        --muted: #b8c2d9;
-        --accent: #5865f2;
-        --accent-2: #ff4d8d;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      html {
-        scroll-behavior: smooth;
-      }
-
-      body {
-        margin: 0;
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        color: var(--text);
-        background:
-          radial-gradient(circle at top left, rgba(88, 101, 242, 0.35), transparent 25%),
-          linear-gradient(135deg, #050816 0%, #0e172d 45%, #101b35 100%);
-        min-height: 100vh;
-        overflow-x: hidden;
-        position: relative;
-        isolation: isolate;
-        background-attachment: fixed;
-      }
-
-      body::before {
-        content: "";
-        position: fixed;
-        inset: -20%;
-        background:
-          radial-gradient(circle at 20% 20%, rgba(88, 101, 242, 0.24), transparent 28%),
-          radial-gradient(circle at 80% 10%, rgba(255, 77, 141, 0.18), transparent 24%),
-          linear-gradient(120deg, rgba(255,255,255,0.08), transparent 35%);
-        background-size: 180% 180%;
-        animation: aurora 16s ease-in-out infinite alternate;
-        filter: blur(22px);
-        z-index: -2;
-        pointer-events: none;
-      }
-
-      body::after {
-        content: "";
-        position: fixed;
-        inset: 0;
-        background-image:
-          linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
-          linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
-        background-size: 42px 42px;
-        mask-image: linear-gradient(to bottom, rgba(0,0,0,0.75), transparent);
-        opacity: 0.18;
-        z-index: -1;
-        pointer-events: none;
-      }
-
-      .scroll-progress {
-        position: fixed;
-        top: 0;
-        left: 0;
-        height: 3px;
-        width: 0%;
-        background: linear-gradient(90deg, var(--accent), var(--accent-2));
-        z-index: 9999;
-        box-shadow: 0 0 18px rgba(88, 101, 242, 0.4);
-        transition: width 0.15s ease-out;
-      }
-
-      .cursor-glow {
-        position: fixed;
-        width: 320px;
-        height: 320px;
-        border-radius: 50%;
-        background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.08) 28%, rgba(255,255,255,0) 70%);
-        filter: blur(30px);
-        pointer-events: none;
-        z-index: 0;
-        opacity: 0.75;
-        transform: translate(-50%, -50%);
-        left: 50%;
-        top: 50%;
-      }
-
-      .hero, .section, .floating-btn, .loader-section {
-        position: relative;
-        z-index: 1;
-      }
-
-      .ambient-particles {
-        position: fixed;
-        inset: 0;
-        pointer-events: none;
-        z-index: 0;
-        overflow: hidden;
-      }
-
-      .ambient-particles span {
-        position: absolute;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: rgba(255,255,255,0.28);
-        filter: blur(1px);
-        animation: driftParticle 12s linear infinite;
-        opacity: 0.8;
-      }
-
-      .ambient-particles span:nth-child(2) { left: 12%; top: 18%; animation-duration: 14s; }
-      .ambient-particles span:nth-child(3) { left: 78%; top: 24%; animation-duration: 10s; }
-      .ambient-particles span:nth-child(4) { left: 20%; top: 74%; animation-duration: 16s; }
-      .ambient-particles span:nth-child(5) { left: 84%; top: 72%; animation-duration: 13s; }
-
-      .hero {
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 40px 20px;
-        position: relative;
-      }
-
-      .hero::before {
-        content: "";
-        position: absolute;
-        right: -8%;
-        top: 8%;
-        width: 320px;
-        height: 320px;
-        border-radius: 50%;
-        background: radial-gradient(circle, rgba(255,255,255,0.14) 0%, rgba(255,255,255,0) 72%);
-        filter: blur(40px);
-        animation: floatOrb 8s ease-in-out infinite;
-        pointer-events: none;
-      }
-
-      .hero::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(120deg, rgba(255,255,255,0.06), transparent 50%);
-        pointer-events: none;
-      }
-
-      .container {
-        width: min(1100px, 100%);
-        display: grid;
-        gap: 24px;
-        align-items: center;
-        grid-template-columns: 1.1fr 0.9fr;
-      }
-
-      .card,
-      .panel,
-      .feature,
-      .stat {
-        transition: transform 0.35s ease, box-shadow 0.35s ease, border-color 0.35s ease, background 0.35s ease;
-        transform-style: preserve-3d;
-      }
-
-      .card {
-        background: var(--panel);
-        backdrop-filter: blur(18px);
-        border: 1px solid rgba(255,255,255,0.12);
-        box-shadow: 0 20px 60px rgba(0,0,0,0.35);
-        border-radius: 24px;
-        padding: 32px;
-      }
-
-      .card:hover,
-      .panel:hover,
-      .feature:hover {
-        transform: translateY(-6px) scale(1.01);
-        box-shadow: 0 24px 70px rgba(0,0,0,0.45), 0 0 0 1px rgba(255,255,255,0.12), 0 0 30px rgba(88,101,242,0.2);
-        border-color: rgba(255,255,255,0.22);
-      }
-
-      .badge {
-        display: inline-block;
-        padding: 8px 12px;
-        border-radius: 999px;
-        background: rgba(88,101,242,0.2);
-        color: #cfd5ff;
-        font-size: 0.9rem;
-        margin-bottom: 16px;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-      }
-
-      h1 {
-        font-size: clamp(2rem, 4vw, 3.3rem);
-        margin: 0 0 14px;
-        line-height: 1.1;
-        background: linear-gradient(90deg, #ffffff 0%, #dfe6ff 45%, #8fa1ff 70%, #ffffff 100%);
-        background-size: 200% auto;
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        animation: shineText 6s linear infinite;
-      }
-
-      .lead {
-        color: var(--muted);
-        font-size: 1.05rem;
-        line-height: 1.7;
-        margin-bottom: 24px;
-      }
-
-      .actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-bottom: 22px;
-      }
-
-      .btn {
-        text-decoration: none;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        padding: 14px 22px;
-        border-radius: 999px;
-        font-weight: 700;
-        transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-        cursor: pointer;
-        border: none;
-        overflow: hidden;
-        position: relative;
-        isolation: isolate;
-        transform-origin: center;
-      }
-
-      .slime-btn {
-        transition: transform 0.22s ease, box-shadow 0.25s ease, background 0.25s ease, filter 0.22s ease;
-        will-change: transform;
-      }
-
-      .slime-btn::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-        border-radius: inherit;
-        background: radial-gradient(circle at var(--slime-x, 50%) var(--slime-y, 50%), rgba(255,255,255,0.32), rgba(255,255,255,0) 62%);
-        opacity: 0;
-        transition: opacity 0.2s ease;
-        pointer-events: none;
-        z-index: -1;
-      }
-
-      .slime-btn:hover::after,
-      .slime-btn.is-active::after {
-        opacity: 1;
-      }
-
-      .btn::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.28) 45%, transparent 70%);
-        transform: translateX(-120%);
-        transition: transform 0.7s ease;
-      }
-
-      .btn:hover {
-        transform: translateY(-3px);
-      }
-
-      .btn:hover::before {
-        transform: translateX(120%);
-      }
-
-      .btn-primary {
-        background: linear-gradient(135deg, var(--accent), var(--accent-2));
-        color: white;
-        box-shadow: 0 12px 30px rgba(88, 101, 242, 0.28);
-      }
-
-      .btn-secondary {
-        background: rgba(255,255,255,0.08);
-        color: var(--text);
-        border: 1px solid rgba(255,255,255,0.14);
-      }
-
-      .stats {
-        display: grid;
-        gap: 14px;
-        grid-template-columns: repeat(3, 1fr);
-        margin-top: 20px;
-      }
-
-      .stat {
-        padding: 14px;
-        border-radius: 16px;
-        background: rgba(255,255,255,0.05);
-        text-align: center;
-      }
-
-      .stat strong {
-        display: block;
-        font-size: 1.2rem;
-        margin-bottom: 4px;
-      }
-
-      .stat span {
-        color: var(--muted);
-        font-size: 0.9rem;
-      }
-
-      .panel {
-        padding: 28px;
-        border-radius: 24px;
-        background: linear-gradient(145deg, rgba(255,255,255,0.11), rgba(255,255,255,0.05));
-        border: 1px solid rgba(255,255,255,0.12);
-        box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
-      }
-
-      .panel h2 {
-        margin-top: 0;
-        margin-bottom: 12px;
-      }
-
-      .panel p {
-        color: var(--muted);
-        line-height: 1.7;
-      }
-
-      .scroll-down {
-        text-align: center;
-        margin-top: 28px;
-        color: #dfe6ff;
-        animation: bob 1.8s infinite;
-        font-size: 0.95rem;
-      }
-
-      .section {
-        padding: 80px 20px 120px;
-        width: min(1100px, 100%);
-        margin: 0 auto;
-      }
-
-      .section h3 {
-        font-size: 1.7rem;
-        margin-bottom: 16px;
-      }
-
-      .feature-grid {
-        display: grid;
-        gap: 18px;
-        grid-template-columns: repeat(3, 1fr);
-        margin-top: 24px;
-      }
-
-      .feature {
-        background: rgba(255,255,255,0.06);
-        border: 1px solid rgba(255,255,255,0.1);
-        border-radius: 18px;
-        padding: 20px;
-      }
-
-      .feature h4 {
-        margin: 0 0 8px;
-        font-size: 1.05rem;
-      }
-
-      .feature p {
-        color: var(--muted);
-        margin: 0;
-        line-height: 1.6;
-      }
-
-      .stack-stage {
-        padding-top: 10px;
-        padding-bottom: 20px;
-      }
-
-      .stack-heading {
-        max-width: 720px;
-        margin-bottom: 20px;
-      }
-
-      .stack-heading h3 {
-        margin: 0 0 10px;
-        font-size: 1.6rem;
-      }
-
-      .stack-heading p {
-        margin: 0;
-        color: var(--muted);
-        line-height: 1.7;
-      }
-
-      .stack-viewport {
-        position: relative;
-        min-height: 900px;
-        padding: 10px 0 20px;
-      }
-
-      .stack-card {
-        position: sticky;
-        top: 72px;
-        max-width: 900px;
-        margin: 0 auto 14px;
-        padding: 24px 28px;
-        border-radius: 24px;
-        background: linear-gradient(135deg, rgba(255,255,255,0.16), rgba(255,255,255,0.06));
-        border: 1px solid rgba(255,255,255,0.14);
-        box-shadow: 0 16px 50px rgba(0,0,0,0.3);
-        backdrop-filter: blur(18px);
-        overflow: hidden;
-        transform-origin: center;
-        transition: transform 0.45s cubic-bezier(.2,.8,.2,1), box-shadow 0.35s ease, opacity 0.45s ease;
-        will-change: transform, opacity;
-      }
-
-      .stack-card::before {
-        content: "";
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(120deg, rgba(88,101,242,0.22), transparent 45%, rgba(255,77,141,0.16));
-        pointer-events: none;
-      }
-
-      .stack-card > * {
-        position: relative;
-        z-index: 1;
-      }
-
-      .stack-card-1 {
-        z-index: 3;
-      }
-
-      .stack-card-2 {
-        top: 96px;
-        z-index: 2;
-        margin-top: -10px;
-      }
-
-      .stack-card-3 {
-        top: 120px;
-        z-index: 1;
-        margin-top: -16px;
-      }
-
-      .stack-card span {
-        display: inline-block;
-        margin-bottom: 8px;
-        color: #dfe6ff;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-        font-size: 0.78rem;
-      }
-
-      .stack-card h4 {
-        margin: 0 0 8px;
-        font-size: 1.12rem;
-      }
-
-      .stack-card p {
-        margin: 0;
-        color: var(--muted);
-        line-height: 1.7;
-      }
-
-      .floating-btn {
-        position: fixed;
-        right: 24px;
-        bottom: 24px;
-        z-index: 999;
-        opacity: 0;
-        transform: translateY(16px);
-        pointer-events: none;
-        transition: all 0.3s ease;
-      }
-
-      .floating-btn.show {
-        opacity: 1;
-        transform: translateY(0);
-        pointer-events: auto;
-      }
-
-      .floating-btn .btn {
-        padding: 14px 20px;
-        box-shadow: 0 16px 40px rgba(88, 101, 242, 0.35);
-      }
-
-      .reveal {
-        opacity: 0;
-        transform: translateY(36px) scale(0.98);
-        transition: opacity 0.8s ease, transform 0.8s cubic-bezier(.2,.7,.2,1);
-        will-change: opacity, transform;
-      }
-
-      .reveal.active {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-      }
-
-      .reveal.delay-1 {
-        transition-delay: 0.1s;
-      }
-
-      .reveal.delay-2 {
-        transition-delay: 0.2s;
-      }
-
-      @keyframes bob {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(6px); }
-      }
-
-      @keyframes floatOrb {
-        0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
-        50% { transform: translate3d(-16px, -18px, 0) scale(1.04); }
-      }
-
-      @keyframes aurora {
-        0% { transform: translate3d(-3%, -2%, 0) scale(1); }
-        100% { transform: translate3d(3%, 2%, 0) scale(1.08); }
-      }
-
-      @keyframes driftParticle {
-        0% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.2; }
-        50% { opacity: 0.9; }
-        100% { transform: translate3d(40px, -60px, 0) scale(1.3); opacity: 0; }
-      }
-
-      @keyframes shineText {
-        0% { background-position: 0% center; }
-        100% { background-position: 200% center; }
-      }
-
-      /* From Uiverse.io by alexruix — adapted for Discord theme */
-      .loader-section {
-        display: flex;
-        justify-content: center;
-        width: 100%;
-        margin: 8px auto 28px;
-        padding: 0 20px;
-        overflow: visible;
-      }
-
-      .loader-box {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-width: 220px;
-        min-height: 220px;
-        padding: 24px 32px;
-        border-radius: 22px;
-        background: rgba(255, 255, 255, 0.07);
-        border: 1px solid rgba(255, 255, 255, 0.14);
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
-      }
-
-      .loader {
-        position: relative;
-        width: 120px;
-        height: 180px;
-        overflow: visible;
-        transform: scale(1.25);
-        transform-origin: center center;
-      }
-
-      .loader::before {
-        content: "";
-        position: absolute;
-        bottom: 30px;
-        left: 50px;
-        height: 30px;
-        width: 30px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, var(--accent), var(--accent-2));
-        box-shadow: 0 0 18px rgba(88, 101, 242, 0.55);
-        animation: loading-bounce 0.5s ease-in-out infinite alternate;
-      }
-
-      .loader::after {
-        content: "";
-        position: absolute;
-        right: 0;
-        top: 0;
-        height: 7px;
-        width: 45px;
-        border-radius: 4px;
-        box-shadow:
-          0 5px 0 #f2f2f2,
-          -35px 50px 0 #f2f2f2,
-          -70px 95px 0 #f2f2f2;
-        animation: loading-step 1s ease-in-out infinite;
-      }
-
-      @keyframes loading-bounce {
-        0% {
-          transform: scale(1, 0.7);
+        /* ============================================
+                    RESET & BASE - SPLINE.DESIGN STYLE
+                ============================================ */
+        :root {
+            --bg: #0a0a0f;
+            --bg-secondary: #12121a;
+            --text: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.65);
+            --text-tertiary: rgba(255, 255, 255, 0.35);
+            --accent: #6c5ce7;
+            --accent-2: #a29bfe;
+            --accent-glow: rgba(108, 92, 231, 0.3);
+            --border: rgba(255, 255, 255, 0.06);
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --card-border: rgba(255, 255, 255, 0.06);
+            --radius: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
         }
 
-        40% {
-          transform: scale(0.8, 1.2);
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        60% {
-          transform: scale(1, 1);
+        html {
+            scroll-behavior: auto;
         }
 
-        100% {
-          bottom: 140px;
-        }
-      }
-
-      @keyframes loading-step {
-        0% {
-          box-shadow:
-            0 10px 0 rgba(0, 0, 0, 0),
-            0 10px 0 #f2f2f2,
-            -35px 50px 0 #f2f2f2,
-            -70px 90px 0 #f2f2f2;
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            cursor: default;
         }
 
-        100% {
-          box-shadow:
-            0 10px 0 #f2f2f2,
-            -35px 50px 0 #f2f2f2,
-            -70px 90px 0 #f2f2f2,
-            -70px 90px 0 rgba(0, 0, 0, 0);
+        /* ============================================
+                    PRELOADER - SPLINE INTRO STYLE
+                ============================================ */
+        #spline-preloader {
+            position: fixed;
+            inset: 0;
+            z-index: 999999;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: transform 1.2s cubic-bezier(0.85, 0, 0.15, 1);
+            will-change: transform;
+            pointer-events: all;
         }
-      }
-
-      @media (max-width: 800px) {
-        .container {
-          grid-template-columns: 1fr;
+        #spline-preloader.loaded {
+            transform: translateY(-100%);
+            pointer-events: none;
         }
 
-        .feature-grid {
-          grid-template-columns: 1fr;
+        .preloader-inner {
+            text-align: center;
         }
 
-        .stats {
-          grid-template-columns: 1fr;
+        .preloader-logo {
+            font-size: 2.5rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+            opacity: 0;
+            animation: preloaderFadeIn 0.6s 0.2s forwards;
         }
-      }
 
-  /* Chèn vào cuối thẻ style */
-  :root {
-    --scroll-speed: 0;
-    --accent: #5865f2; 
-    --accent-2: #ff4d8d;
-  }
+        .preloader-sub {
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 32px;
+            opacity: 0;
+            animation: preloaderFadeIn 0.6s 0.4s forwards;
+        }
 
-  .bg-grid-mesh {
-    position: fixed;
-    inset: 0;
-    background-image: 
-      linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), 
-      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-    background-size: calc(42px + var(--scroll-speed) * 2) calc(42px + var(--scroll-speed) * 2); 
-    mask-image: radial-gradient(circle at 50% 50%, black 40%, transparent 90%);
-    opacity: 0.25;
-    z-index: -1;
-    pointer-events: none;
-    transition: background-size 0.2s ease-out;
-  }
+        .preloader-bar-wrap {
+            width: 200px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 4px;
+            overflow: hidden;
+            opacity: 0;
+            animation: preloaderFadeIn 0.6s 0.6s forwards;
+            margin: 0 auto;
+        }
 
-  body.light-theme .bg-grid-mesh {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
-  }
+        .preloader-bar-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            border-radius: 4px;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
 
-  .bg-glow-orbs {
-    position: fixed;
-    inset: 0;
-    z-index: -2;
-    pointer-events: none;
-    overflow: hidden;
-  }
+        .preloader-counter {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--text);
+            font-variant-numeric: tabular-nums;
+            letter-spacing: -0.04em;
+            margin-top: 20px;
+            opacity: 0;
+            animation: preloaderFadeIn 0.6s 0.5s forwards;
+        }
 
-  .orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(100px);
-    opacity: 0.3;
-    transition: transform 0.3s ease-out, background 0.5s ease;
-  }
+        .preloader-counter .percent {
+            font-size: 1rem;
+            color: var(--text-tertiary);
+        }
 
-  .orb-1 {
-    top: 10%;
-    left: -10%;
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, var(--accent) 0%, transparent 80%);
-  }
+        @keyframes preloaderFadeIn {
+            to { opacity: 1; }
+        }
 
-  .orb-2 {
-    bottom: 10%;
-    right: -10%;
-    width: 600px;
-    height: 600px;
-    background: radial-gradient(circle, var(--accent-2) 0%, transparent 80%);
-  }
+        /* ============================================
+                    3D CANVAS
+                ============================================ */
+        #spline-canvas {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 0;
+            pointer-events: none;
+        }
+        #spline-canvas.interactive {
+            pointer-events: auto;
+        }
 
-  .hero {
-    position: relative;
-    z-index: 1;
-    will-change: transform;
-  }
+        /* ============================================
+                    CUSTOM CURSOR
+                ============================================ */
+        .cursor-dot {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: var(--accent-2);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99999;
+            mix-blend-mode: difference;
+            transition: width 0.2s, height 0.2s, background 0.2s;
+            transform: translate(-50%, -50%);
+        }
+        .cursor-dot.hover {
+            width: 24px;
+            height: 24px;
+            background: var(--accent);
+            opacity: 0.6;
+        }
+        .cursor-ring {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 99998;
+            transition: width 0.3s, height 0.3s, border-color 0.3s;
+            transform: translate(-50%, -50%);
+        }
+        .cursor-ring.hover {
+            width: 60px;
+            height: 60px;
+            border-color: var(--accent);
+        }
 
-  .lenis-object-wrapper {
-    position: fixed;
-    top: 55%;
-    left: 55%; /* Nằm hơi lệch về phía bên phải để làm nền cho chữ */
-    transform: translate(-50%, -50%);
-    z-index: -1; /* ĐƯA XUỐNG DƯỚI NỀN AN TOÀN */
-    pointer-events: none; /* Chuột lướt qua bình thường không bị cản */
-    perspective: 1000px;
-  }
+        /* ============================================
+                    SCROLL INDICATOR & PROGRESS
+                ============================================ */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 2px;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), var(--accent-2));
+            z-index: 9999;
+            transition: width 0.1s linear;
+        }
 
-  .lenis-object {
-    width: 320px; /* Tăng kích thước lên làm hình nền */
-    height: 320px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    will-change: transform;
-    transition: transform 0.15s cubic-bezier(0.25, 1, 0.5, 1);
-    opacity: 0.12; /* Làm mờ đi giống hình chìm nghệ thuật trong lenis.dev */
-  }
+        /* ============================================
+                    NAVIGATION
+                ============================================ */
+        .nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(180deg, rgba(10, 10, 15, 0.8) 0%, transparent 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
 
-  .lenis-object svg {
-    width: 100%;
-    height: 100%;
-    fill: #5865f2; /* Màu xanh thương hiệu Discord */
-    /* Tạo hiệu ứng đổ bóng phát sáng Neon */
-    filter: drop-shadow(0 0 20px rgba(88, 101, 242, 0.6)); 
-  }
+        .nav-logo {
+            font-size: 1.2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--accent), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-  /* Nếu bạn chuyển sang chế độ Light-theme (nếu có) */
-  body.light-theme .lenis-object svg {
-    fill: #3b82f6;
-    opacity: 0.08;
-  }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+            list-style: none;
+        }
 
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1.5px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+        }
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--border);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+        .theme-toggle-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text);
+        }
+
+        /* ============================================
+                    MUSIC PLAYER - FLOATING STYLE
+                ============================================ */
+        #music-player {
+            position: fixed;
+            bottom: 80px;
+            right: 30px;
+            z-index: 9998;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 16px 10px 12px;
+            border-radius: 100px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            cursor: pointer;
+            user-select: none;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+        }
+        #music-player.visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+        #music-player:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(108, 92, 231, 0.2);
+        }
+        #music-player.playing .player-play-icon {
+            animation: spin-icon 3s linear infinite;
+        }
+
+        .player-play-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--accent);
+            border-radius: 50%;
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+        .player-play-icon svg {
+            width: 14px;
+            height: 14px;
+            fill: white;
+        }
+
+        .player-info {
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            max-width: 160px;
+        }
+        .player-status {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-tertiary);
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+        .player-status.playing {
+            color: #22c55e;
+        }
+        .player-track {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            margin-top: 1px;
+        }
+
+        .player-wave {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            height: 16px;
+            margin-left: 4px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        #music-player.playing .player-wave {
+            opacity: 1;
+        }
+        .player-wave span {
+            width: 2px;
+            height: 100%;
+            background: var(--accent);
+            border-radius: 2px;
+            animation: wave-bounce 0.6s ease-in-out infinite alternate;
+        }
+        .player-wave span:nth-child(2) { animation-delay: 0.1s; height: 60%; }
+        .player-wave span:nth-child(3) { animation-delay: 0.2s; height: 40%; }
+        .player-wave span:nth-child(4) { animation-delay: 0.3s; height: 80%; }
+        .player-wave span:nth-child(5) { animation-delay: 0.15s; height: 50%; }
+
+        @keyframes wave-bounce {
+            0% { transform: scaleY(0.3); }
+            100% { transform: scaleY(1); }
+        }
+        @keyframes spin-icon {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        body.light-theme #music-player {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: rgba(0, 0, 0, 0.06);
+        }
+        body.light-theme #music-player:hover {
+            background: rgba(255, 255, 255, 0.95);
+        }
+
+        .click-hint {
+            position: fixed;
+            bottom: 130px;
+            right: 30px;
+            z-index: 9997;
+            font-size: 0.65rem;
+            color: var(--text-tertiary);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+            text-align: right;
+        }
+        .click-hint.visible {
+            opacity: 1;
+        }
+        .click-hint span {
+            display: inline-block;
+            animation: hint-pulse 2s ease-in-out infinite;
+        }
+        @keyframes hint-pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        @media (max-width: 600px) {
+            #music-player {
+                bottom: 70px;
+                right: 16px;
+                padding: 8px 12px 8px 10px;
+            }
+            .player-info { max-width: 100px; }
+            .click-hint { display: none; }
+        }
+
+        /* ============================================
+                    HERO SECTION - SPLINE LAYOUT
+                ============================================ */
+        .hero {
+            position: relative;
+            z-index: 1;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 0 40px;
+            margin-top: 0;
+        }
+
+        .hero-content {
+            max-width: 650px;
+            padding-top: 80px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 14px;
+            border-radius: 100px;
+            background: rgba(108, 92, 231, 0.1);
+            border: 1px solid rgba(108, 92, 231, 0.2);
+            color: var(--accent-2);
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+            animation: fadeUp 0.8s 0.2s both;
+        }
+
+        .hero-badge .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #22c55e;
+            animation: pulse-dot 2s infinite;
+        }
+
+        .hero h1 {
+            font-size: clamp(3rem, 6vw, 5.5rem);
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -0.04em;
+            margin-bottom: 20px;
+            animation: fadeUp 0.8s 0.3s both;
+        }
+
+        .hero h1 .gradient-text {
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-2) 50%, #fd79a8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            max-width: 500px;
+            margin-bottom: 36px;
+            font-weight: 400;
+            animation: fadeUp 0.8s 0.4s both;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            animation: fadeUp 0.8s 0.5s both;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 14px 28px;
+            border-radius: 100px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            font-family: inherit;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #8b7cf7);
+            color: white;
+            box-shadow: 0 4px 25px var(--accent-glow);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 40px var(--accent-glow);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+            padding: 14px 20px;
+        }
+        .btn-ghost:hover {
+            color: var(--text);
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 40px;
+            margin-top: 48px;
+            animation: fadeUp 0.8s 0.6s both;
+        }
+
+        .hero-stat {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .hero-stat .number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #fff, rgba(255, 255, 255, 0.6));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-stat .label {
+            font-size: 0.8rem;
+            color: var(--text-tertiary);
+            font-weight: 500;
+            margin-top: 2px;
+        }
+
+        .hero-stat .label-shine {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hero-stat .label-shine .shine-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #22c55e;
+            animation: pulse-dot 2s infinite;
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-tertiary);
+            font-size: 0.7rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            animation: fadeUp 0.8s 0.8s both;
+        }
+
+        .scroll-indicator .mouse {
+            width: 24px;
+            height: 38px;
+            border: 1.5px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .scroll-indicator .mouse .wheel {
+            width: 3px;
+            height: 8px;
+            background: var(--accent-2);
+            border-radius: 2px;
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: scrollWheel 1.5s infinite;
+        }
+
+        /* ============================================
+                    SECTIONS
+                ============================================ */
+        .section {
+            position: relative;
+            z-index: 1;
+            padding: 120px 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent-2);
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: clamp(2rem, 4vw, 3.2rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .section-desc {
+            font-size: 1rem;
+            line-height: 1.7;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin-bottom: 48px;
+        }
+
+        /* ============================================
+                    STACK CARDS
+                ============================================ */
+        .stack-viewport {
+            position: relative;
+            min-height: 850px;
+            padding-top: 20px;
+        }
+
+        .stack-card {
+            position: sticky;
+            top: 100px;
+            max-width: 800px;
+            margin: 0 auto 24px;
+            padding: 40px;
+            border-radius: var(--radius-xl);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                opacity 0.5s ease,
+                box-shadow 0.5s ease;
+            will-change: transform, opacity;
+        }
+
+        .stack-card:hover {
+            border-color: rgba(108, 92, 231, 0.15);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .stack-card .card-number {
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: rgba(255, 255, 255, 0.03);
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            line-height: 1;
+            pointer-events: none;
+            user-select: none;
+        }
+
+        .stack-card .card-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 100px;
+            background: rgba(108, 92, 231, 0.1);
+            border: 1px solid rgba(108, 92, 231, 0.15);
+            color: var(--accent-2);
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+
+        .stack-card h4 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            margin-bottom: 12px;
+        }
+
+        .stack-card p {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        .stack-card-1 { z-index: 3; }
+        .stack-card-2 { top: 140px; z-index: 2; }
+        .stack-card-3 { top: 180px; z-index: 1; }
+
+        /* ============================================
+                    FEATURES GRID
+                ============================================ */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .feature-card {
+            padding: 32px;
+            border-radius: var(--radius-lg);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            border-color: rgba(108, 92, 231, 0.2);
+            background: rgba(108, 92, 231, 0.03);
+            transform: translateY(-4px);
+        }
+
+        .feature-card .icon {
+            font-size: 2rem;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .feature-card h4 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-size: 0.9rem;
+        }
+
+        /* ============================================
+                    FORM SECTION
+                ============================================ */
+        .form-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 40px;
+            text-align: center;
+        }
+
+        .form-section .section-title {
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+            width: 100%;
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
+        .username-box {
+            width: 100%;
+            position: relative;
+        }
+
+        .username-label {
+            width: 100%;
+            padding: 16px 24px;
+            text-align: center;
+            color: white;
+            font-weight: 600;
+            border-radius: var(--radius);
+            cursor: pointer;
+            background: linear-gradient(135deg, var(--accent), #8b7cf7);
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .username-label:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 30px var(--accent-glow);
+        }
+
+        .username-box input {
+            width: 100%;
+            margin-top: 10px;
+            height: 0;
+            opacity: 0;
+            border: none;
+            outline: none;
+            border-radius: var(--radius);
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text);
+            padding: 0 18px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: all 0.35s;
+        }
+
+        .username-box.active input {
+            height: 52px;
+            opacity: 1;
+            padding: 0 18px;
+            border: 1.5px solid rgba(108, 92, 231, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .username-box.active .username-label {
+            transform: translateY(-6px) scale(0.95);
+            opacity: 0.8;
+        }
+
+        .send-btn {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            font-family: inherit;
+            background: linear-gradient(135deg, var(--accent), #8b7cf7);
+            border: none;
+            transition: all 0.3s;
+        }
+
+        .send-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px var(--accent-glow);
+        }
+
+        #success {
+            position: fixed;
+            top: 80px;
+            right: -400px;
+            padding: 14px 24px;
+            border-radius: var(--radius);
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            background: linear-gradient(135deg, #19c37d, #22c55e);
+            box-shadow: 0 8px 30px rgba(34, 197, 94, 0.3);
+            transition: 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            z-index: 99999;
+        }
+        #success.show { right: 30px; }
+
+        /* ============================================
+                    FLOATING INVITE BUTTON
+                ============================================ */
+        .floating-btn {
+            position: fixed;
+            right: 30px;
+            bottom: 30px;
+            z-index: 999;
+            opacity: 0;
+            transform: translateY(20px) scale(0.9);
+            pointer-events: none;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .floating-btn.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+
+        /* ============================================
+                    REVEAL ANIMATIONS
+                ============================================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+                transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            will-change: opacity, transform;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .reveal.delay-1 { transition-delay: 0.15s; }
+        .reveal.delay-2 { transition-delay: 0.3s; }
+        .reveal.delay-3 { transition-delay: 0.45s; }
+
+        /* ============================================
+                    KEYFRAMES
+                ============================================ */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+        @keyframes scrollWheel {
+            0% { transform: translateX(-50%) translateY(0); opacity: 1; }
+            100% { transform: translateX(-50%) translateY(14px); opacity: 0; }
+        }
+
+        /* ============================================
+                    LIGHT THEME
+                ============================================ */
+        body.light-theme {
+            --bg: #f8f9ff;
+            --bg-secondary: #eef0f7;
+            --text: #0a0a0f;
+            --text-secondary: rgba(10, 10, 15, 0.6);
+            --text-tertiary: rgba(10, 10, 15, 0.3);
+            --border: rgba(0, 0, 0, 0.06);
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --card-border: rgba(0, 0, 0, 0.06);
+            --accent-glow: rgba(108, 92, 231, 0.15);
+        }
+
+        body.light-theme .nav {
+            background: linear-gradient(180deg, rgba(248, 249, 255, 0.9) 0%, transparent 100%);
+        }
+
+        body.light-theme .hero-stat .number {
+            background: linear-gradient(135deg, #0a0a0f, rgba(10, 10, 15, 0.6));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        body.light-theme .stack-card .card-number {
+            color: rgba(0, 0, 0, 0.03);
+        }
+
+        /* ============================================
+                    PARTICLE OVERLAY
+                ============================================ */
+        .particles-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            animation: particleFloat linear infinite;
+        }
+
+        @keyframes particleFloat {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+        }
+
+        /* ============================================
+                    RESPONSIVE
+                ============================================ */
+        @media (max-width: 900px) {
+            .hero { padding: 0 24px; }
+            .hero h1 { font-size: clamp(2rem, 8vw, 3.2rem); }
+            .hero-stats { gap: 24px; flex-wrap: wrap; }
+            .section { padding: 80px 24px; }
+            .features-grid { grid-template-columns: 1fr; }
+            .nav { padding: 16px 24px; }
+            .nav-links { gap: 20px; }
+            .stack-card { padding: 28px; border-radius: 20px; }
+            .stack-card .card-number { font-size: 2.5rem; top: 16px; right: 20px; }
+            #spline-canvas { opacity: 0.5; }
+        }
+
+        @media (max-width: 600px) {
+            .nav-links a:not(.theme-toggle-btn) { display: none; }
+            .hero h1 { font-size: clamp(1.8rem, 10vw, 2.5rem); }
+            .hero p { font-size: 0.95rem; }
+        }
     </style>
-  </head>
-  <body>
+</head>
+<body>
 
-    <div class="cursor-glow" id="cursorGlow"></div>
-    <div class="ambient-particles" aria-hidden="true">
-      <span></span><span></span><span></span><span></span><span></span>
+    <!-- ===== PRELOADER ===== -->
+    <div id="spline-preloader">
+        <div class="preloader-inner">
+            <div class="preloader-logo">✦ Discord</div>
+            <div class="preloader-sub">Đang tải trải nghiệm</div>
+            <div class="preloader-bar-wrap">
+                <div class="preloader-bar-fill" id="preloaderBarFill"></div>
+            </div>
+            <div class="preloader-counter">
+                <span id="preloaderCounter">00</span>
+                <span class="percent">%</span>
+            </div>
+        </div>
     </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <!-- Scroll Progress -->
     <div class="scroll-progress" id="scrollProgress"></div>
 
-    <section class="hero">
-      <div class="container">
-        <div class="card reveal">
-          <div class="badge">Discord Community</div>
-          <h1>Tham gia máy chủ của chúng tôi và kết nối cùng cộng đồng năng động</h1>
-          <p class="lead">
-            Từ game,chill cùng nhau — đây là nơi bạn có thể giao lưu, tìm bạn và cùng nhau tạo nên những trải nghiệm thật vui.
-          </p>
-          <div class="actions">
-            <a id="joinBtn" class="btn btn-primary slime-btn" href="https://discord.gg/KxTA7enpY" target="_blank" rel="noopener noreferrer">Tham gia ngay</a>
-          <a class="btn btn-secondary btn-luat" href="#" data-href="https://nguyenphuhoang243-web.github.io/Rule-For-Discord-Server/">Xem luật máy chủ</a>
-            <a class="btn btn-secondary" href="#about">Khám phá thêm</a>
-          </div>
-          <div class="stats">
-            <div class="stat">
-              <strong>30+</strong>
-              <span>Thành viên</span>
+    <!-- 3D Canvas Container -->
+    <div id="spline-canvas" class="interactive"></div>
+
+    <!-- Particles Overlay -->
+    <div class="particles-overlay" id="particlesOverlay"></div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-logo">✦ Discord</div>
+        <ul class="nav-links">
+            <li><a href="#about">Tính năng</a></li>
+            <li><a href="#features">Cộng đồng</a></li>
+            <li>
+                <button class="theme-toggle-btn" id="themeToggle" aria-label="Toggle theme">
+                    <span id="themeIcon">🌙</span>
+                </button>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <div class="hero-badge">
+                <span class="dot"></span>
+                Discord Community
             </div>
-            <div class="stat">
-              <strong>24/7</strong>
-              <span>Hoạt động</span>
+            <h1>
+                Kết nối cùng<br>
+                <span class="gradient-text">cộng đồng</span><br>
+                năng động
+            </h1>
+            <p>
+                Nơi bạn có thể giao lưu, tìm bạn mới, tham gia sự kiện và cùng nhau tạo nên những trải nghiệm đáng nhớ.
+            </p>
+            <div class="hero-actions">
+                <a class="btn btn-primary" href="https://discord.gg/KxTA7enpY" target="_blank" rel="noopener noreferrer">
+                    Tham gia ngay
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </a>
+                <a class="btn btn-secondary btn-luat" href="#" data-href="https://nguyenphuhoang243-web.github.io/Rule-For-Discord-Server/">
+                    Xem luật máy chủ
+                </a>
+                <a class="btn btn-ghost" href="#about">
+                    Khám phá ↓
+                </a>
             </div>
-            <div class="stat">
-              <strong>🎮</strong>
-              <span>Nhiều sự kiện</span>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <span class="number">30+</span>
+                    <span class="label">Thành viên</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="number">24/7</span>
+                    <span class="label">Hoạt động</span>
+                </div>
+                <div class="hero-stat">
+                    <span class="number">🎮</span>
+                    <span class="label label-shine">
+                        <span class="shine-dot"></span>
+                        Nhiều sự kiện
+                    </span>
+                </div>
             </div>
-          </div>
-          <div class="scroll-down">Kéo xuống để xem thêm ↓</div>
         </div>
 
-        <div class="panel reveal delay-1">
-          <h2>Vì sao nên tham gia?</h2>
-          <!-- Tìm đến khu vực ô "Vì sao nên tham gia" trong code của bạn -->
-  <div class="reason-section"> 
-    
-    <!-- CÁC THÀNH PHẦN CỦA Ô NỘI DUNG NẰM Ở ĐÂY -->
-
-    <hr style="border: 0; margin-bottom: 20px;"> <!-- Dòng kẻ mờ để giãn cách nếu cần -->
-
-    <!-- DÁN ĐOẠN HTML NÀY NGAY DƯỚI Ô ĐÓ -->
-    <a class="btn-youtube" href="https://www.youtube.com/@hao22830" target="_blank" rel="noopener noreferrer">
-      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-        <path d="M8.051 1.999h.089c.822.003 4.987.033 6.11.335a2.01 2.01 0 0 1 1.415 1.42c.101.38.172.883.22 1.402l.01.104.022.26.008.104c.065.914.073 1.77.074 1.957v.075c-.001.194-.01 1.108-.082 2.06l-.008.105-.009.104c-.05.572-.124 1.14-.235 1.558a2.01 2.01 0 0 1-1.415 1.42c-1.16.312-5.569.334-6.18.335h-.142c-.309 0-1.587-.006-2.927-.052l-.17-.006-.087-.004-.171-.007-.171-.007c-1.11-.049-2.167-.128-2.654-.26a2.01 2.01 0 0 1-1.415-1.419c-.111-.417-.185-.986-.235-1.558L.09 9.82l-.008-.104A31 31 0 0 1 0 7.68v-.123c.002-.215.01-.958.064-1.778l.007-.103.003-.052.008-.104.022-.26.01-.104c.048-.519.119-1.023.22-1.402a2.01 2.01 0 0 1 1.415-1.42c.487-.13 1.544-.21 2.654-.26l.17-.007.172-.006.086-.003.171-.007A100 100 0 0 1 7.858 2zM6.4 5.209v4.818l4.157-2.408z"/>
-      </svg>
-      <span>Ghé thăm YouTube</span>
-    </a>
-  </div>
-          <p>
-            Chúng tôi xây dựng một không gian thân thiện, dễ kết nối và luôn chào đón những người mới. Bạn có thể trò chuyện, tham gia sự kiện, nhận hỗ trợ và tận hưởng những khoảnh khắc đáng nhớ cùng nhau.
-          </p>
-          <p>
-            Nếu bạn thích một cộng đồng ấm áp, thoải mái và đầy màu sắc, đây chính là nơi phù hợp cho bạn.
-
-            <!-- Khung hiển thị bài hát đang phát -->
-  <div id="music-player">
-    <div class="player-icon">🎵</div>
-    <div class="player-info">
-      <div class="player-status" id="track-status">Đang tải nhạc...</div>
-      <div class="track-name" id="track-title">Tên bài hát</div>
-    </div>
-  </div>
-
-  <!-- Thẻ audio ẩn để xử lý nhạc -->
-  <audio id="bg-music" loop></audio>
-          </p>
+        <div class="scroll-indicator">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+            <span>Scroll</span>
         </div>
-      </div>
     </section>
 
-    <section class="section stack-stage" id="about">
-      <div class="username-box reveal">
-      <div class="username-label">Username</div>
-      <input type="text" id="username" placeholder="Nhập username...">
-  </div>
-  <div class="send-btn" id="sendBtn">
-      <span>🚀 Gửi Username</span>
-  </div>
+    <!-- SECTION: STACK CARDS -->
+    <section class="section" id="about">
+        <div class="section-label reveal">Giới thiệu</div>
+        <h3 class="section-title reveal">Trải nghiệm cuộn<br>đa tầng lớp</h3>
+        <p class="section-desc reveal">Những khối nội dung chồng lên nhau khi bạn kéo xuống, tạo cảm giác như đang mở từng lớp trải nghiệm.</p>
 
-  <div id="success">
-  ✅ Đã gửi thành công
-  </div>
-      <div class="stack-heading reveal">
-        <div class="badge">Immersive Scroll</div>
-        <h3>Cuộn xuống là thấy hiệu ứng “ghép lớp” ngay</h3>
-        <p>Những khối card sẽ chồng lên nhau khi bạn kéo xuống, tạo cảm giác như đang mở từng lớp nội dung.</p>
-      </div>
-
-      <div class="stack-viewport">
-        <article class="stack-card stack-card-1 reveal">
-          <span>01 / Community</span>
-          <h4>Không gian kết nối đầy cảm hứng</h4>
-          <p>Hệ thống kênh và hoạt động được tổ chức như một trải nghiệm liên tục, giúp người xem cảm nhận sự sống động của server.</p>
-        </article>
-        <article class="stack-card stack-card-2 reveal delay-1">
-          <span>02 / Events</span>
-          <h4>Sự kiện được đưa vào trung tâm</h4>
-          <p>Khơi gợi cảm giác nơi đây luôn có điều mới xảy ra: party, mini game, challenge và những khoảnh khắc đáng nhớ.</p>
-        </article>
-        <article class="stack-card stack-card-3 reveal delay-2">
-          <span>03 / Growth</span>
-          <h4>Mỗi lần cuộn là một lớp mới mở ra</h4>
-          <p>Đây là kiểu bố cục tạo cảm giác “ghép hình” rất phù hợp cho một landing page Discord hiện đại.</p>
-        </article>
-      </div>
+        <div class="stack-viewport">
+            <article class="stack-card stack-card-1 reveal">
+                <span class="card-number">01</span>
+                <span class="card-tag">Community</span>
+                <h4>Không gian kết nối đầy cảm hứng</h4>
+                <p>Hệ thống kênh và hoạt động được tổ chức như một trải nghiệm liên tục, giúp người xem cảm nhận sự sống động của server.</p>
+            </article>
+            <article class="stack-card stack-card-2 reveal delay-1">
+                <span class="card-number">02</span>
+                <span class="card-tag">Events</span>
+                <h4>Sự kiện được đưa vào trung tâm</h4>
+                <p>Khơi gợi cảm giác nơi đây luôn có điều mới xảy ra: party, mini game, challenge và những khoảnh khắc đáng nhớ.</p>
+            </article>
+            <article class="stack-card stack-card-3 reveal delay-2">
+                <span class="card-number">03</span>
+                <span class="card-tag">Growth</span>
+                <h4>Mỗi lần cuộn là một lớp mới mở ra</h4>
+                <p>Đây là kiểu bố cục tạo cảm giác "ghép hình" rất phù hợp cho một landing page Discord hiện đại.</p>
+            </article>
+        </div>
     </section>
 
+    <!-- SECTION: FEATURES -->
     <section class="section" id="features">
-      <h3 class="reveal">Điểm nổi bật của server</h3>
-      <div class="feature-grid">
-        <div class="feature reveal">
-          <h4>🌟 Không gian thân thiện</h4>
-          <p>Mọi người đều được chào đón, từ người mới đến thành viên lâu năm.</p>
+        <div class="section-label reveal">Tính năng</div>
+        <h3 class="section-title reveal">Điểm nổi bật<br>của server</h3>
+
+        <div class="features-grid">
+            <div class="feature-card reveal">
+                <span class="icon">🌟</span>
+                <h4>Không gian thân thiện</h4>
+                <p>Mọi người đều được chào đón, từ người mới đến thành viên lâu năm.</p>
+            </div>
+            <div class="feature-card reveal delay-1">
+                <span class="icon">⚡</span>
+                <h4>Sự kiện thường xuyên</h4>
+                <p>Tham gia các hoạt động, mini game và những event thú vị mỗi tuần.</p>
+            </div>
+            <div class="feature-card reveal delay-2">
+                <span class="icon">🤝</span>
+                <h4>Kết nối dễ dàng</h4>
+                <p>Giao lưu với cộng đồng, tìm bạn và cùng nhau chia sẻ niềm vui.</p>
+            </div>
         </div>
-        <div class="feature reveal delay-1">
-          <h4>⚡ Sự kiện thường xuyên</h4>
-          <p>Tham gia các hoạt động, mini game và những event thú vị mỗi tuần.</p>
-        </div>
-        <div class="feature reveal delay-2">
-          <h4>🤝 Kết nối dễ dàng</h4>
-          <p>Giao lưu với cộng đồng, tìm bạn và cùng nhau chia sẻ niềm vui.</p>
-        </div>
-      </div>
     </section>
 
+    <!-- SECTION: FORM -->
+    <section class="section form-section" id="form">
+        <div class="section-label reveal">Tham gia</div>
+        <h3 class="section-title reveal">Trở thành một phần<br>của cộng đồng</h3>
+        <p class="section-desc reveal" style="margin-left: auto; margin-right: auto;">
+            Nhập username để kết nối với mọi người ngay hôm nay.
+        </p>
+
+        <div class="form-container reveal">
+            <div class="username-box">
+                <div class="username-label">Nhập username của bạn</div>
+                <input type="text" id="username" placeholder="Username của bạn..." autocomplete="off">
+            </div>
+            <div class="send-btn" id="sendBtn">
+                <span>🚀 Gửi Username</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Floating Invite Button -->
     <div class="floating-btn" id="floatingInvite">
-      <a class="btn btn-primary" href="https://discord.gg/your-invite-link" target="_blank" rel="noopener noreferrer">Mời vào Discord</a>
+        <a class="btn btn-primary" href="https://discord.gg/KxTA7enpY" target="_blank" rel="noopener noreferrer">
+            <svg width="14" height="14" viewBox="0 0 127.14 96.36" fill="currentColor">
+                <path d="M107.7,8.07A105.15,105.15,0,0,0,77.26,0a77.19,77.19,0,0,0-3.3,6.83A96.67,96.67,0,0,0,53.22,6.83,77.19,77.19,0,0,0,49.88,0,105.15,105.15,0,0,0,19.44,8.07C3.66,31.58-1.95,54.65,1,77.53a105.79,105.79,0,0,0,32,16.29,77.7,77.7,0,0,0,6.83-11.12A68.8,68.8,0,0,1,29.3,77.47c1.72-1.26,3.47-2.58,5.16-4a75.6,75.6,0,0,0,65.23,0c1.69,1.39,3.44,2.71,5.16,4a68.8,68.8,0,0,1-10.54,5.22,77.7,77.7,0,0,0,6.83,11.12,105.79,105.79,0,0,0,32-16.29C129.66,47.78,123.39,24.89,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53S36.18,40.36,42.45,40.36,53.83,46,53.83,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.24,60,73.24,53S78.41,40.36,84.69,40.36,96.07,46,96.07,53,91,65.69,84.69,65.69Z"/>
+            </svg>
+            Discord
+        </a>
     </div>
+
+    <!-- Music Player -->
+    <div id="music-player">
+        <div class="player-play-icon">
+            <svg viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+        </div>
+        <div class="player-info">
+            <div class="player-status" id="playerStatus">Nhấp để phát nhạc</div>
+            <div class="player-track" id="playerTrack">Chưa có nhạc</div>
+        </div>
+        <div class="player-wave">
+            <span></span><span></span><span></span><span></span><span></span>
+        </div>
+    </div>
+
+    <div class="click-hint" id="clickHint">
+        <span>✦ Click bất kỳ đâu để phát nhạc ✦</span>
+    </div>
+
+    <!-- Notification -->
+    <div id="success">✅ Đã gửi thành công</div>
+
+    <!-- Loading Overlay for Rules -->
+    <div id="loadingOverlay" style="position:fixed; inset:0; background:rgba(10,10,15,0.9); backdrop-filter:blur(12px); z-index:99999; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.3s;">
+        <div style="display:flex; flex-direction:column; align-items:center; gap:24px;">
+            <div class="preloader-logo" style="font-size:1.5rem; background:linear-gradient(135deg,var(--accent),var(--accent-2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">✦ Chuyển tiếp</div>
+            <div style="width:40px; height:40px; border:2px solid rgba(255,255,255,0.1); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite;"></div>
+            <div style="font-size:0.75rem; color:var(--text-tertiary); letter-spacing:0.1em; text-transform:uppercase;">Đang tải luật máy chủ...</div>
+        </div>
+    </div>
+
+    <audio id="bg-music" preload="none"></audio>
 
     <script>
+        // ================================================
+        // PRELOADER
+        // ================================================
+        (function() {
+            const preloader = document.getElementById('spline-preloader');
+            const counterEl = document.getElementById('preloaderCounter');
+            const barFill = document.getElementById('preloaderBarFill');
 
-  document.addEventListener("DOMContentLoaded", function () {
-    // 1. Danh sách bài hát ngẫu nhiên
-    const playlist = [
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.floor(Math.random() * 4) + 2;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    counterEl.textContent = '100';
+                    barFill.style.width = '100%';
+
+                    setTimeout(() => {
+                        preloader.classList.add('loaded');
+                        document.body.style.overflow = '';
+                        // After preloader, show music hint
+                        setTimeout(() => {
+                            document.getElementById('clickHint').classList.add('visible');
+                        }, 500);
+                    }, 500);
+                } else {
+                    counterEl.textContent = progress < 10 ? '0' + progress : progress;
+                    barFill.style.width = progress + '%';
+                }
+            }, 40);
+
+            // Lock scroll during preloader
+            document.body.style.overflow = 'hidden';
+        })();
+
+        // ================================================
+        // THREE.JS - 3D SPLINE-STYLE OBJECT
+        // ================================================
+        (function() {
+            const canvas = document.getElementById('spline-canvas');
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.z = 5;
+
+            const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.toneMapping = THREE.ACESFilmicToneMapping;
+            renderer.toneMappingExposure = 1.2;
+            canvas.appendChild(renderer.domElement);
+
+            // Lights
+            const ambientLight = new THREE.AmbientLight(0x404060, 0.5);
+            scene.add(ambientLight);
+            const mainLight = new THREE.DirectionalLight(0x6c5ce7, 2);
+            mainLight.position.set(2, 3, 4);
+            scene.add(mainLight);
+            const fillLight = new THREE.DirectionalLight(0xa29bfe, 1.5);
+            fillLight.position.set(-3, 1, 2);
+            scene.add(fillLight);
+            const rimLight = new THREE.DirectionalLight(0xfd79a8, 1);
+            rimLight.position.set(0, -3, -2);
+            scene.add(rimLight);
+
+            // Main 3D object
+            const geometry = new THREE.IcosahedronGeometry(1.4, 1);
+            const material = new THREE.MeshPhysicalMaterial({
+                color: 0x6c5ce7,
+                metalness: 0.3,
+                roughness: 0.2,
+                clearcoat: 0.8,
+                clearcoatRoughness: 0.3,
+                transparent: true,
+                opacity: 0.85,
+                envMapIntensity: 1.5,
+            });
+            const mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh);
+
+            const wireframeGeo = new THREE.IcosahedronGeometry(1.42, 1);
+            const wireframeMat = new THREE.MeshBasicMaterial({ color: 0xa29bfe, wireframe: true, transparent: true, opacity: 0.15 });
+            const wireframe = new THREE.Mesh(wireframeGeo, wireframeMat);
+            scene.add(wireframe);
+
+            const glowGeo = new THREE.IcosahedronGeometry(0.6, 0);
+            const glowMat = new THREE.MeshBasicMaterial({ color: 0x8b7cf7, transparent: true, opacity: 0.2 });
+            const glowSphere = new THREE.Mesh(glowGeo, glowMat);
+            scene.add(glowSphere);
+
+            // Particles
+            const particlesGroup = new THREE.Group();
+            const particleCount = 200;
+            const particleGeo = new THREE.BufferGeometry();
+            const positions = new Float32Array(particleCount * 3);
+            const colors = new Float32Array(particleCount * 3);
+
+            for (let i = 0; i < particleCount; i++) {
+                const radius = 2 + Math.random() * 1.5;
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos(2 * Math.random() - 1);
+                positions[i*3] = radius * Math.sin(phi) * Math.cos(theta);
+                positions[i*3+1] = radius * Math.sin(phi) * Math.sin(theta);
+                positions[i*3+2] = radius * Math.cos(phi);
+                const color = new THREE.Color().setHSL(0.65 + Math.random() * 0.15, 0.8, 0.5 + Math.random() * 0.3);
+                colors[i*3] = color.r;
+                colors[i*3+1] = color.g;
+                colors[i*3+2] = color.b;
+            }
+            particleGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            particleGeo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            const particleMat = new THREE.PointsMaterial({
+                size: 0.04, transparent: true, opacity: 0.6,
+                vertexColors: true, blending: THREE.AdditiveBlending, depthWrite: false
+            });
+            const particleSystem = new THREE.Points(particleGeo, particleMat);
+            particlesGroup.add(particleSystem);
+            scene.add(particlesGroup);
+
+            let mouseX = 0, mouseY = 0, targetX = 0, targetY = 0, scrollY = 0;
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+                mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+            });
+            document.addEventListener('touchmove', (e) => {
+                const t = e.touches[0];
+                if (t) { mouseX = (t.clientX / window.innerWidth) * 2 - 1; mouseY = -(t.clientY / window.innerHeight) * 2 + 1; }
+            }, { passive: true });
+            window.addEventListener('scroll', () => { scrollY = window.scrollY; }, { passive: true });
+
+            const clock = new THREE.Clock();
+            function animate() {
+                const id = requestAnimationFrame(animate);
+                const time = clock.getElapsedTime();
+                targetX += (mouseX - targetX) * 0.05;
+                targetY += (mouseY - targetY) * 0.05;
+
+                mesh.rotation.x = targetY * 0.5 + time * 0.15;
+                mesh.rotation.y = targetX * 0.5 + time * 0.2;
+                wireframe.rotation.x = mesh.rotation.x;
+                wireframe.rotation.y = mesh.rotation.y;
+                glowSphere.rotation.x = -mesh.rotation.x * 0.5;
+                glowSphere.rotation.y = -mesh.rotation.y * 0.5;
+
+                const pulse = 1 + Math.sin(time * 0.8) * 0.03;
+                mesh.scale.set(pulse, pulse, pulse);
+                wireframe.scale.set(pulse*1.01, pulse*1.01, pulse*1.01);
+
+                particlesGroup.rotation.x = time * 0.05;
+                particlesGroup.rotation.y = time * 0.08;
+
+                const offset = scrollY * 0.002;
+                mesh.position.y = Math.sin(time * 0.3) * 0.1 - offset * 0.3;
+                wireframe.position.y = mesh.position.y;
+                glowSphere.position.y = mesh.position.y;
+                particlesGroup.position.y = mesh.position.y;
+                camera.position.z = 5 + offset * 0.5;
+
+                renderer.render(scene, camera);
+                window.__splineFrame = id;
+            }
+            animate();
+
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        })();
+
+        // ================================================
+        // LENIS SMOOTH SCROLL
+        // ================================================
+        const lenis = new Lenis({ duration: 1.1, smoothWheel: true, wheelMultiplier: 0.8, touchMultiplier: 1.5 });
+        function raf(time) { lenis.raf(time); requestAnimationFrame(raf); }
+        requestAnimationFrame(raf);
+
+        // ================================================
+        // PARTICLES BACKGROUND
+        // ================================================
+        (function() {
+            const c = document.getElementById('particlesOverlay');
+            for (let i = 0; i < 30; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.width = (1 + Math.random() * 3) + 'px';
+                p.style.height = p.style.width;
+                p.style.animationDuration = (10 + Math.random() * 20) + 's';
+                p.style.animationDelay = (Math.random() * 20) + 's';
+                p.style.opacity = 0.1 + Math.random() * 0.3;
+                c.appendChild(p);
+            }
+        })();
+
+        // ================================================
+        // CUSTOM CURSOR
+        // ================================================
+        const dot = document.getElementById('cursorDot');
+        const ring = document.getElementById('cursorRing');
+        let cx = 0, cy = 0, rx = 0, ry = 0;
+        document.addEventListener('mousemove', (e) => { cx = e.clientX; cy = e.clientY; dot.style.left = cx + 'px'; dot.style.top = cy + 'px'; });
+        function animCursor() { rx += (cx - rx) * 0.1; ry += (cy - ry) * 0.1; ring.style.left = rx + 'px'; ring.style.top = ry + 'px'; requestAnimationFrame(animCursor); }
+        animCursor();
+
+        document.querySelectorAll('a, button, .btn, .feature-card, .stack-card, .username-label, .send-btn, #music-player').forEach(el => {
+            el.addEventListener('mouseenter', () => { dot.classList.add('hover'); ring.classList.add('hover'); });
+            el.addEventListener('mouseleave', () => { dot.classList.remove('hover'); ring.classList.remove('hover'); });
+        });
+        if ('ontouchstart' in window) { dot.style.display = 'none'; ring.style.display = 'none'; }
+
+        // ================================================
+        // SCROLL PROGRESS
+        // ================================================
+        const scrollProgress = document.getElementById('scrollProgress');
+        lenis.on('scroll', () => {
+            const st = window.scrollY;
+            const sh = document.documentElement.scrollHeight - window.innerHeight;
+            const p = sh > 0 ? (st / sh) * 100 : 0;
+            scrollProgress.style.width = Math.min(100, Math.max(0, p)) + '%';
+            const fb = document.getElementById('floatingInvite');
+            st > 300 ? fb.classList.add('show') : fb.classList.remove('show');
+        });
+
+        // ================================================
+        // REVEAL
+        // ================================================
+        const obs = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('active'); obs.unobserve(e.target); } });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+        // ================================================
+        // THEME TOGGLE
+        // ================================================
+        const themeToggle = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        themeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('light-theme');
+            themeIcon.textContent = document.body.classList.contains('light-theme') ? '☀️' : '🌙';
+        });
+
+        // ================================================
+        // MUSIC PLAYER - Click anywhere to play
+        // ================================================
+        const musicPlayer = document.getElementById('music-player');
+        const playerStatus = document.getElementById('playerStatus');
+        const playerTrack = document.getElementById('playerTrack');
+        const audio = document.getElementById('bg-music');
+        const clickHint = document.getElementById('clickHint');
+
+        // Playlist - bạn có thể thay đổi đường dẫn file nhạc ở đây
+        const playlist = [
       { title: "Earrings-Malcom Todd", src: "earrings.mp3" }, 
       { title: "Sweet Boy-Malcom Todd", src: "Sweet Boy.mp3" },
       { title: "Love Me Not-Ravyn Lenae,...", src: "Love Me Not.mp3" },
       { title: "Love Me-JMSN", src: "Love Me.mp3" },
-      { title: "Hesitation-Kapa Boy,...", src: "Hesitation.mp3" },
-    ];
+      { title: "Hesitation-Kapa Boy,...", src: "Hesitation.mp3" }
+        ];
 
-    const audio = document.getElementById("bg-music");
-    const trackStatus = document.getElementById("track-status");
-    const trackTitle = document.getElementById("track-title");
+        let musicInitialized = false;
+        let currentTrackIndex = 0;
 
-    // Chọn ngẫu nhiên bài hát
-    const randomTrack = playlist[Math.floor(Math.random() * playlist.length)];
-    audio.src = randomTrack.src;
-    trackTitle.textContent = randomTrack.title;
-    audio.volume = 0.4;
+        function initMusic() {
+            if (musicInitialized) return true;
+            // Pick random track
+            currentTrackIndex = Math.floor(Math.random() * playlist.length);
+            const track = playlist[currentTrackIndex];
+            audio.src = track.src;
+            playerTrack.textContent = track.title;
+            audio.volume = 0.4;
+            musicInitialized = true;
+            return true;
+        }
 
-    // Hàm kích hoạt nhạc chính thức (Khi có click hợp lệ)
-    function enableSound() {
-      audio.muted = false;
-      audio.play().then(() => {
-        trackStatus.textContent = "Đang phát 🎵";
-        trackStatus.classList.add("playing");
-        cleanUpEvents();
-      }).catch(err => console.log("Chờ click thực tế..."));
-    }
+        function togglePlay() {
+            if (!musicInitialized) {
+                initMusic();
+            }
+            if (audio.paused) {
+                audio.play().then(() => {
+                    musicPlayer.classList.add('playing');
+                    playerStatus.textContent = 'Đang phát';
+                    playerStatus.classList.add('playing');
+                    clickHint.classList.remove('visible');
+                }).catch(err => {
+                    console.log('Play prevented:', err);
+                    playerStatus.textContent = 'Click để phát';
+                });
+            } else {
+                audio.pause();
+                musicPlayer.classList.remove('playing');
+                playerStatus.textContent = 'Tạm dừng';
+                playerStatus.classList.remove('playing');
+            }
+        }
 
-    // Hàm xử lý riêng cho hành động CUỘN CHUỘT (Trình duyệt chặn tiếng nhưng cho phép chạy ngầm muted)
-    function handleScroll() {
-      audio.muted = true; // Ép về im lặng để trình duyệt cho phép phát
-      audio.play().then(() => {
-        trackStatus.textContent = "Click bất kỳ để mở tiếng 🔊";
-        // Khi đã chạy ngầm thành công, chỉ cần người dùng click phát là mở tiếng luôn
-        window.addEventListener("click", enableSound);
-      }).catch(err => console.log("Scroll vẫn bị chặn"));
-    }
+        // Click on music player
+        musicPlayer.addEventListener('click', togglePlay);
 
-    // Hàm dọn dẹp các sự kiện sau khi nhạc đã phát thành công
-    function cleanUpEvents() {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("click", enableSound);
-    }
+        // Click ANYWHERE on the page to start music (first time)
+        document.addEventListener('click', function firstClick() {
+            if (!musicInitialized) {
+                initMusic();
+                // Try to play but browser may block - show player
+                musicPlayer.classList.add('visible');
+                audio.play().then(() => {
+                    musicPlayer.classList.add('playing');
+                    playerStatus.textContent = 'Đang phát';
+                    playerStatus.classList.add('playing');
+                    clickHint.classList.remove('visible');
+                }).catch(() => {
+                    playerStatus.textContent = 'Nhấp để phát nhạc';
+                });
+            }
+            document.removeEventListener('click', firstClick);
+        });
 
-    // 2. Chờ đúng 2 giây rồi mới kích hoạt hệ thống
-    setTimeout(() => {
-      // Thử phát thẳng xem trình duyệt có thả cửa không
-      audio.play().then(() => {
-        trackStatus.textContent = "Đang phát 🎵";
-        trackStatus.classList.add("playing");
-      }).catch(err => {
-        // Nếu bị chặn, bắt đầu bật "bẫy" cuộn và click
-        trackStatus.textContent = "Cuộn chuột hoặc click để nghe nhạc 🎵";
-        window.addEventListener("scroll", handleScroll, { once: true });
-        window.addEventListener("click", enableSound, { once: true });
-      });
-    }, 1000);
-  });
-
-      // --- XỬ LÝ CHẠY HIỆU ỨNG MỞ ĐẦU ---
-  (function() {
-    // Khóa cuộn chuột tạm thời
-    document.body.classList.add('preloading');
-    if (typeof lenis !== 'undefined') lenis.stop(); // Tạm dừng mượt cuộn chuột
-
-    const counterEl = document.querySelector('.preloader-counter');
-    const barEl = document.querySelector('.preloader-bar');
-    const preloaderEl = document.getElementById('lenis-preloader');
-    
-    let currentPercent = 0;
-
-    // Hàm chạy bộ đếm số tăng dần
-    const countInterval = setInterval(() => {
-      // Tăng ngẫu nhiên để tạo cảm giác hệ thống đang load dữ liệu thật
-      currentPercent += Math.floor(Math.random() * 4) + 2; 
-      
-      if (currentPercent >= 100) {
-        currentPercent = 100;
-        clearInterval(countInterval);
-        
-        // Định dạng hiển thị đủ 3 chữ số khi đạt 100
-        counterEl.textContent = "100";
-        barEl.style.width = "100%";
-        
-        // Đếm xong -> Kích hoạt hiệu ứng trượt màn hình đen lên trên
+        // Auto hide hint after 8 seconds even if no click
         setTimeout(() => {
-          if (preloaderEl) preloaderEl.classList.add('loaded');
-          document.body.classList.remove('preloading');
-          
-          // Mở lại tính năng Smooth Scroll hoạt động bình thường
-          if (typeof lenis !== 'undefined') lenis.start(); 
-        }, 400); // Chờ 0.4 giây sau khi đạt 100% rồi mới trượt lên
-      } else {
-        // Định dạng chữ số luôn có 2 chữ số (ví dụ: 05, 09, 45)
-        counterEl.textContent = currentPercent < 10 ? "0" + currentPercent : currentPercent;
-        barEl.style.width = currentPercent + "%";
-      }
-    }, 35); // Tốc độ chạy chữ (số càng nhỏ chạy càng nhanh)
-  })();
-    
-      // --- ĐIỀU KHIỂN NÚT CHUYỂN ĐỔI THEME GIAO DIỆN ---
-      const themeToggleInput = document.getElementById('themeToggle');
-      
-      themeToggleInput.addEventListener('change', () => {
-        if (themeToggleInput.checked) {
-          document.body.classList.add('light-theme');
-        } else {
-          document.body.classList.remove('light-theme');
+            clickHint.classList.remove('visible');
+        }, 8000);
+
+        // Show player after preloader
+        setTimeout(() => {
+            if (!musicInitialized) {
+                musicPlayer.classList.add('visible');
+            }
+        }, 2000);
+
+        // When song ends, play next
+        audio.addEventListener('ended', () => {
+            currentTrackIndex = (currentTrackIndex + 1) % playlist.length;
+            const track = playlist[currentTrackIndex];
+            audio.src = track.src;
+            playerTrack.textContent = track.title;
+            audio.play().catch(() => {});
+        });
+
+        // ================================================
+        // FORM HANDLING
+        // ================================================
+        const userBox = document.querySelector('.username-box');
+        const userLabel = document.querySelector('.username-label');
+        const userInput = document.getElementById('username');
+        const sendBtn = document.getElementById('sendBtn');
+        const successNotification = document.getElementById('success');
+
+        userLabel.addEventListener('click', () => { userBox.classList.add('active'); userInput.focus(); });
+        userInput.addEventListener('blur', () => { if (userInput.value.trim() === '') userBox.classList.remove('active'); });
+        userInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendBtn.click(); });
+
+        sendBtn.addEventListener('click', async () => {
+            const val = userInput.value.trim();
+            if (val === '') {
+                userBox.style.animation = 'shake 0.4s ease';
+                setTimeout(() => { userBox.style.animation = ''; }, 500);
+                return;
+            }
+            sendBtn.querySelector('span').textContent = '⏳ Đang gửi...';
+            sendBtn.style.pointerEvents = 'none';
+            try {
+                await fetch('https://docs.google.com/forms/d/e/1FAIpQLSfG7iWgzj-vkOufppbVaXIyWv6227w7ZDpeArwfEhl02hp--Q/formResponse', {
+                    method: 'POST',
+                    body: (() => { const fd = new FormData(); fd.append('entry.1432806072', val); return fd; })(),
+                    mode: 'no-cors'
+                });
+                successNotification.classList.add('show');
+                userInput.value = '';
+                userBox.classList.remove('active');
+                setTimeout(() => successNotification.classList.remove('show'), 2500);
+            } catch(err) {
+                console.error(err);
+                alert('Có lỗi xảy ra khi gửi!');
+            } finally {
+                sendBtn.querySelector('span').textContent = '🚀 Gửi Username';
+                sendBtn.style.pointerEvents = 'auto';
+            }
+        });
+
+        // ================================================
+        // LOADING OVERLAY FOR RULES
+        // ================================================
+        const btnLuat = document.querySelector('.btn-luat');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        if (btnLuat && loadingOverlay) {
+            btnLuat.addEventListener('click', function(e) {
+                e.preventDefault();
+                const url = this.getAttribute('data-href');
+                loadingOverlay.style.opacity = '1';
+                loadingOverlay.style.pointerEvents = 'auto';
+                setTimeout(() => { window.location.href = url; }, 2000);
+            });
         }
-      });
 
-        // --- HIỆU ỨNG LOADER KHI XEM LUẬT MÁY CHỦ ---
-      const btnLuat = document.querySelector('.btn-luat');
-      const loadingOverlay = document.getElementById('loadingOverlay');
-
-      if (btnLuat && loadingOverlay) {
-        btnLuat.addEventListener('click', function(event) {
-          event.preventDefault(); // Chặn không cho chuyển trang ngay lập tức
-          
-          const targetUrl = this.getAttribute('data-href'); // Lấy đường dẫn link
-          
-          // Hiện màn hình loader lên
-          loadingOverlay.classList.add('active');
-          
-          // Chờ đúng 2 giây (2000 mili-giây) rồi chuyển hướng
-          setTimeout(() => {
-            window.location.href = targetUrl;
-          }, 2000);
-        });
-      }
-
-  const floatingBtn = document.getElementById('floatingInvite');
-      const joinBtn = document.getElementById('joinBtn');
-      const cursorGlow = document.getElementById('cursorGlow');
-      const scrollProgress = document.getElementById('scrollProgress');
-      const revealElements = document.querySelectorAll('.reveal');
-
-      const updateScrollEffects = () => {
-        if (window.scrollY > 220) {
-          floatingBtn.classList.add('show');
-        } else {
-          floatingBtn.classList.remove('show');
-        }
-
-        const scrollTop = window.scrollY;
-        const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
-        scrollProgress.style.width = `${Math.min(100, Math.max(0, progress))}%`;
-      };
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('active');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.2 });
-
-      revealElements.forEach((element) => observer.observe(element));
-
-      const tiltItems = document.querySelectorAll('.card, .panel, .feature');
-      tiltItems.forEach((item) => {
-        item.addEventListener('mousemove', (event) => {
-          const rect = item.getBoundingClientRect();
-          const x = event.clientX - rect.left;
-          const y = event.clientY - rect.top;
-          const rotateY = ((x / rect.width) - 0.5) * 8;
-          const rotateX = ((0.5 - (y / rect.height))) * 8;
-          item.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-6px) scale(1.01)`;
+        // ================================================
+        // KEYBOARD SHORTCUTS
+        // ================================================
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') { userInput.value = ''; userBox.classList.remove('active'); userInput.blur(); }
+            if (e.key === ' ' || e.key === 'MediaPlayPause') { e.preventDefault(); togglePlay(); }
         });
 
-        item.addEventListener('mouseleave', () => {
-          item.style.transform = '';
-        });
-      });
+        // ================================================
+        // DYNAMIC STYLES
+        // ================================================
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-8px)} 40%{transform:translateX(8px)} 60%{transform:translateX(-5px)} 80%{transform:translateX(5px)} }
+            @keyframes spin { to { transform: rotate(360deg); } }
+        `;
+        document.head.appendChild(style);
 
-      const resetJoinButton = () => {
-        if (!joinBtn) return;
-        joinBtn.classList.remove('is-active');
-        joinBtn.style.transform = '';
-        joinBtn.style.setProperty('--slime-x', '50%');
-        joinBtn.style.setProperty('--slime-y', '50%');
-      };
-
-      const updateJoinButton = (event) => {
-        if (!joinBtn) return;
-        const rect = joinBtn.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-        const px = (x / rect.width - 0.5) * 2;
-        const py = (y / rect.height - 0.5) * 2;
-        const stretchX = 1 + Math.min(0.16, Math.max(-0.1, px * 0.12));
-        const stretchY = 1 + Math.min(0.16, Math.max(-0.1, -py * 0.13));
-        const translateX = px * 3.5;
-        const translateY = -3 + py * 2.5;
-
-        joinBtn.classList.add('is-active');
-        joinBtn.style.setProperty('--slime-x', `${(x / rect.width) * 100}%`);
-        joinBtn.style.setProperty('--slime-y', `${(y / rect.height) * 100}%`);
-        joinBtn.style.transform = `translate(${translateX}px, ${translateY}px) scaleX(${stretchX}) scaleY(${stretchY})`;
-      };
-
-      if (joinBtn) {
-        joinBtn.addEventListener('pointerenter', (event) => updateJoinButton(event));
-        joinBtn.addEventListener('pointermove', (event) => updateJoinButton(event));
-        joinBtn.addEventListener('pointerleave', resetJoinButton);
-        joinBtn.addEventListener('pointerdown', () => {
-          joinBtn.style.transform = 'translateY(1px) scaleX(0.96) scaleY(0.94)';
-        });
-        joinBtn.addEventListener('pointerup', (event) => updateJoinButton(event));
-        joinBtn.addEventListener('pointercancel', resetJoinButton);
-      }
-
-      const updateGlow = (x, y) => {
-        cursorGlow.style.left = `${x}px`;
-        cursorGlow.style.top = `${y}px`;
-      };
-
-      window.addEventListener('scroll', updateScrollEffects, { passive: true });
-      window.addEventListener('load', updateScrollEffects);
-      window.addEventListener('mousemove', (event) => {
-        updateGlow(event.clientX, event.clientY);
-      });
-
-      window.addEventListener('touchmove', (event) => {
-        const touch = event.touches[0];
-        if (touch) {
-          updateGlow(touch.clientX, touch.clientY);
-        }
-      }, { passive: true });
-
-      // --- ĐOẠN ĐÃ SỬA LỖI TƯƠNG TÁC & GỬI GOOGLE FORMS ---
-      const userBox = document.querySelector(".username-box");
-      const userLabel = document.querySelector(".username-label");
-      const userInput = document.getElementById("username");
-      const sendBtn = document.getElementById("sendBtn");
-      const successNotification = document.getElementById("success");
-
-      // Click label -> Kích hoạt class active để ô nhập trượt xuống mượt mà
-      userLabel.onclick = () => {
-          userBox.classList.add("active");
-          userInput.focus();
-      };
-
-      // Bấm ra ngoài khi trống -> Tự thu gọn lại
-      userInput.addEventListener("blur", () => {
-          if (userInput.value.trim() === "") {
-              userBox.classList.remove("active");
-          }
-      });
-
-      // Sự kiện Click Gửi thẳng vào Google Forms của bạn
-      sendBtn.onclick = async () => {
-          const usernameVal = userInput.value.trim();
-
-          if (usernameVal === "") {
-              alert("Vui lòng nhập Username trước khi gửi!");
-              return;
-          }
-
-          // Đổi trạng thái nút bấm tránh spam liên tục
-          sendBtn.querySelector("span").textContent = "⏳ Đang gửi...";
-          sendBtn.style.pointerEvents = "none";
-
-          // Cấu hình link xử lý ngầm và ID câu hỏi Google Form của bạn
-          const formUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfG7iWgzj-vkOufppbVaXIyWv6227w7ZDpeArwfEhl02hp--Q/formResponse";
-          const formData = new FormData();
-          formData.append("entry.1432806072", usernameVal);
-
-          try {
-              // Chế độ 'no-cors' giúp chạy trơn tru trên GitHub Pages mà không sợ bị chặn bảo mật
-              await fetch(formUrl, {
-                  method: "POST",
-                  body: formData,
-                  mode: "no-cors"
-              });
-
-              // Hiện thông báo thành công phát sáng trượt ra từ bên phải màn hình
-              successNotification.textContent = "✅ Đã gửi thành công";
-              successNotification.classList.add("show");
-
-              // Reset trạng thái form nhập liệu
-              userInput.value = "";
-              userBox.classList.remove("active");
-
-              // Tự động ẩn thông báo thành công sau 2.5 giây
-              setTimeout(() => {
-                  successNotification.classList.remove("show");
-              }, 2500);
-
-          } catch (error) {
-              console.error("Lỗi:", error);
-              alert("Có lỗi xảy ra khi gửi, vui lòng thử lại!");
-          } finally {
-              // Trả lại nút bấm trạng thái ban đầu
-              sendBtn.querySelector("span").textContent = "🚀 Gửi Username";
-              sendBtn.style.pointerEvents = "auto";
-          }
-      };
+        console.log('🚀 Spline-style Discord landing page loaded!');
     </script>
-  </body>
-  </html>
+</body>
+</html>
+
